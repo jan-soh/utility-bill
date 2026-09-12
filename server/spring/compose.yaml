@@ -1,0 +1,13 @@
+services:
+
+  utility-bill-db:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: utility_bill
+    env_file:
+      - .env-dev
+    ports:
+      - "3306:3306"
+    volumes:
+      - /Users/jan/Documents/Software-Projects/docker-volumes/utility-bill:/var/lib/mysql
