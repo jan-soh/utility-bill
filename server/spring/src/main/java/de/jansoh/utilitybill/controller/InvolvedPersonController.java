@@ -3,7 +3,6 @@ package de.jansoh.utilitybill.controller;
 import de.jansoh.utilitybill.model.InvolvedPersonDTO;
 import de.jansoh.utilitybill.services.InvolvedPersonService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -42,7 +41,7 @@ public class InvolvedPersonController {
     @DeleteMapping(PATH_ID)
     public ResponseEntity<String> deleteInvolvedPerson(@PathVariable UUID id) {
 
-        if (!involvedPersonService.deleteInvolvedPersonById(id)){
+        if (!involvedPersonService.deleteInvolvedPersonById(id)) {
             throw new NotFoundException();
         }
 
