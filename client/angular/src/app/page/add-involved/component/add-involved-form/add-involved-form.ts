@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {Involved} from '../../model/Involved';
+import {Involved} from '../../../../model/Involved';
 import {FormsModule} from '@angular/forms';
 
 @Component({

@@ -1,0 +1,23 @@
+<div>
+<table>
+  <tr>
+    <th>
+      Name
+    </th>
+    <th>
+      Start of involvement
+    </th>
+    <th>
+      End of involvement
+    </th>
+  </tr>
+  @for (involved of involvedList; track involved.name) {
+    <tr>
+      <td>{{involved.name}}</td>
+      <td>{{involved.startOfInvolvement | date}}</td>
+      <td>{{involved.endOfInvolvement | date}}</td>
+    </tr>
+  }
+</table>
+</div>
+

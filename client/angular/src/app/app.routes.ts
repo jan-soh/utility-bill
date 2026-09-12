@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
-import { Overview } from './overview/overview';
-import { AddExpense } from './add-expense/add-expense';
-import { AddInvolved } from './add-involved/add-involved';
-import { Account } from './account/account';
+import { Overview } from './page/overview/overview';
+import { AddExpense } from './page/add-expense/add-expense';
+import { AddInvolved } from './page/add-involved/add-involved';
+import { Account } from './page/account/account';
 
 export const routes: Routes = [
 
