@@ -1,0 +1,21 @@
+<div class="form-container">
+  <div class="form-group">
+    <label for="name">Name:</label>
+    <input id="name" type="text" [(ngModel)]="involved.name"/>
+  </div>
+
+  <div class="form-group">
+    <label for="start-of-participation">Start of participation:</label>
+    <input id="start-of-participation" type="text" [(ngModel)]="involved.startOfParticipation"/>
+  </div>
+
+  <div class="form-group">
+    <label for="end-of-participation">End of participation:</label>
+    <input id="end-of-participation" type="text" [(ngModel)]="involved.endOfParticipation"/>
+  </div>
+
+  <div class="button-group">
+    <button class="save-button" (click)="save()">Save</button>
+  </div>
+</div>
+

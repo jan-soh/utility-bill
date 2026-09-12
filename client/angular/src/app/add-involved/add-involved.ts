@@ -1,16 +1,11 @@
 import {Component} from '@angular/core';
-import {Involved} from './model/Involved';
-import {FormsModule} from '@angular/forms';
+import {AddInvolvedForm} from './component/add-involved-form/add-involved-form';
 
 @Component({
   selector: 'add-involved',
   templateUrl: './add-involved.html',
-  imports: [FormsModule],
+  imports: [AddInvolvedForm],
 })
 export class AddInvolved {
-  involved: Involved = new Involved();
 
-  public save(): void {
-    console.log(this.involved);
-  }
 }

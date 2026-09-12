@@ -3,23 +3,9 @@
 </style>
 
 
-<div>
+<div class="page-content-container">
   <h1>Add Involved</h1>
   <p>Add another involved person.</p>
-  <div>
-    <label for="name">
-      Name:
-      <input id="name" type="text" [(ngModel)]="involved.name"/>
-    </label>
-    <label for="start-of-participation">
-      Start of participation:
-      <input id="start-of-participation" type="text" [(ngModel)]="involved.startOfParticipation"/>
-    </label>
-    <label for="start-of-participation">
-      End of participation:
-      <input id="end-of-participation" type="text" [(ngModel)]="involved.endOfParticipation"/>
-    </label>
-    <button (click)="save()">Save</button>
-  </div>
+  <add-involved-form></add-involved-form>
 </div>
 
