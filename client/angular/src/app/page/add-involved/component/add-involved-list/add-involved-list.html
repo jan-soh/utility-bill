@@ -1,23 +1,27 @@
-<div>
-<table>
-  <tr>
-    <th>
-      Name
-    </th>
-    <th>
-      Start of involvement
-    </th>
-    <th>
-      End of involvement
-    </th>
-  </tr>
-  @for (involved of involvedList; track involved.name) {
-    <tr>
-      <td>{{involved.name}}</td>
-      <td>{{involved.startOfInvolvement | date}}</td>
-      <td>{{involved.endOfInvolvement | date}}</td>
-    </tr>
-  }
-</table>
+<div class="overflow-x-auto shadow-md sm:rounded-lg">
+  <table class="w-full text-sm text-left text-gray-500">
+    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+      <tr>
+        <th scope="col" class="px-6 py-3">
+          Name
+        </th>
+        <th scope="col" class="px-6 py-3">
+          Start of involvement
+        </th>
+        <th scope="col" class="px-6 py-3">
+          End of involvement
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (involved of involvedList; track involved.name) {
+        <tr class="bg-white border-b hover:bg-gray-50">
+          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{involved.name}}</td>
+          <td class="px-6 py-4">{{involved.startOfInvolvement | date}}</td>
+          <td class="px-6 py-4">{{involved.endOfInvolvement | date}}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>
 
