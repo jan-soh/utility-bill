@@ -1,6 +1,5 @@
 import {Component, inject} from '@angular/core';
-import {Involved} from '../../../../model/Involved';
-import {InvolvedService} from '../../../../service/InvolvedService';
+import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {DatePipe} from '@angular/common';
 
 @Component({
@@ -9,7 +8,8 @@ import {DatePipe} from '@angular/common';
   styleUrl: './add-involved-list.css',
   imports: [DatePipe],
 })
-export class AddInvolvedList{
-  private involvedService = inject(InvolvedService);
-  public involvedList: Array<Involved> = this.involvedService.findAll();
+export class AddInvolvedList {
+
+  private involvedSubject = inject(InvolvedPersonSubject);
+  public involvedList = this.involvedSubject.involvedPersons;
 }
