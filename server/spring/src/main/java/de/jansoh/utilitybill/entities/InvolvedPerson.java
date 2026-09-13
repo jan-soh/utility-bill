@@ -37,6 +37,16 @@ public class InvolvedPerson {
 
     private LocalDate endOfInvolvement;
 
-    @OneToMany(mappedBy = "involvedPerson")
+    @OneToMany(mappedBy = "involvedPerson", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<UtilityCostPaymentsPerMonth> utilityCostPaymentsPerMonthHistory = new ArrayList<>();
+
+    public void addUtilityCostPayment(UtilityCostPaymentsPerMonth payment) {
+        utilityCostPaymentsPerMonthHistory.add(payment);
+        payment.setInvolvedPerson(this);
+    }
+
+    public void removeUtilityCostPayment(UtilityCostPaymentsPerMonth payment) {
+        utilityCostPaymentsPerMonthHistory.remove(payment);
+        payment.setInvolvedPerson(null);
+    }
 }

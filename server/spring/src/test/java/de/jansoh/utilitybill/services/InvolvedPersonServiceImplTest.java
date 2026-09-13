@@ -49,13 +49,13 @@ public class InvolvedPersonServiceImplTest {
         InvolvedPerson person = new InvolvedPerson();
         person.setName("Test Person 2");
         person.setStartOfInvolvement(LocalDate.now());
-        InvolvedPerson savedPerson = involvedPersonRepository.save(person);
 
         UtilityCostPaymentsPerMonth payment = new UtilityCostPaymentsPerMonth();
         payment.setAmount(new BigDecimal("100.00"));
         payment.setValidFrom(LocalDate.now());
-        payment.setInvolvedPerson(savedPerson);
-        paymentsRepository.save(payment);
+        person.addUtilityCostPayment(payment);
+
+        involvedPersonRepository.save(person);
 
         List<InvolvedPersonDTO> persons = involvedPersonService.listInvolvedPersons();
 

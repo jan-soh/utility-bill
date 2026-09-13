@@ -39,13 +39,11 @@ public class InvolvedPersonController {
     }
 
     @DeleteMapping(PATH_ID)
-    public ResponseEntity<String> deleteInvolvedPerson(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteInvolvedPerson(@PathVariable UUID id) {
 
         if (!involvedPersonService.deleteInvolvedPersonById(id)) {
             throw new NotFoundException();
         }
-
-        involvedPersonService.deleteInvolvedPersonById(id);
 
         return ResponseEntity.noContent().build();
     }
