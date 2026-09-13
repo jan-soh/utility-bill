@@ -1,9 +1,13 @@
 package de.jansoh.utilitybill.services;
 
 import de.jansoh.utilitybill.entities.InvolvedPerson;
+import de.jansoh.utilitybill.entities.UtilityCostPaymentsPerMonth;
 import de.jansoh.utilitybill.mappers.InvolvedPersonMapper;
+import de.jansoh.utilitybill.mappers.UtilityCostPaymentsPerMonthMapper;
 import de.jansoh.utilitybill.model.InvolvedPersonDTO;
+import de.jansoh.utilitybill.model.UtilityCostPaymentsPerMonthDTO;
 import de.jansoh.utilitybill.repositories.InvolvedPersonRepository;
+import de.jansoh.utilitybill.repositories.UtilityCostPaymentsPerMonthRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,21 +21,53 @@ import java.util.concurrent.atomic.AtomicReference;
 public class InvolvedPersonServiceImpl implements InvolvedPersonService {
 
     private final InvolvedPersonRepository repository;
-    private final InvolvedPersonMapper mapper;
+    private final InvolvedPersonMapper involvedPersonMapper;
+    private final UtilityCostPaymentsPerMonthRepository paymentsRepository;
+    private final UtilityCostPaymentsPerMonthMapper paymentsMapper;
 
     @Override
     public List<InvolvedPersonDTO> listInvolvedPersons() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+        return repository.findAll().stream().map(this::mapToDto).toList();
     }
 
     @Override
     public Optional<InvolvedPersonDTO> getInvolvedPersonById(UUID id) {
-        return Optional.ofNullable(mapper.toDto(repository.findById(id).orElse(null)));
+        return repository.findById(id).map(this::mapToDto);
+    }
+
+    private InvolvedPersonDTO mapToDto(InvolvedPerson involvedPerson) {
+
+        InvolvedPersonDTO dto = involvedPersonMapper.toDto(involvedPerson);
+        List<UtilityCostPaymentsPerMonth> payments = paymentsRepository.findAll().stream()
+                .filter(p -> p.getInvolvedPerson() != null && p.getInvolvedPerson().getId().equals(involvedPerson.getId()))
+                .toList();
+        involvedPerson.setUtilityCostPaymentsPerMonthHistory(payments);
+
+        involvedPerson.getUtilityCostPaymentsPerMonthHistory().forEach(payment -> {
+
+            UtilityCostPaymentsPerMonthDTO paymentDTO = paymentsMapper.toDto(payment);
+            paymentDTO.setInvolvedPersonId(involvedPerson.getId());
+
+            dto.getUtilityCostPaymentsPerMonthHistory().add(paymentDTO);
+        });
+
+        return dto;
     }
 
     @Override
     public InvolvedPersonDTO saveNewPerson(InvolvedPersonDTO involvedPersonDTO) {
-        return mapper.toDto(repository.save(mapper.toEntity(involvedPersonDTO)));
+
+        InvolvedPerson newInvolvedPerson = involvedPersonMapper.toEntity(involvedPersonDTO);
+        InvolvedPerson savedInvolvedPerson = repository.save(newInvolvedPerson);
+
+        involvedPersonDTO.getUtilityCostPaymentsPerMonthHistory().forEach(paymentDTO -> {
+
+            UtilityCostPaymentsPerMonth payments = paymentsMapper.toEntity(paymentDTO);
+            payments.setInvolvedPerson(savedInvolvedPerson);
+            paymentsRepository.save(payments);
+        });
+
+        return repository.findById(savedInvolvedPerson.getId()).map(this::mapToDto).get();
     }
 
     @Override
@@ -45,7 +81,20 @@ public class InvolvedPersonServiceImpl implements InvolvedPersonService {
             involvedPerson.setStartOfInvolvement(involvedPersonDTO.getStartOfInvolvement());
             involvedPerson.setEndOfInvolvement(involvedPersonDTO.getEndOfInvolvement());
 
-            optionalInvolvedPersonDTO.set(Optional.of(mapper.toDto(repository.save(involvedPerson))));
+            // Clear existing payments
+            List<UtilityCostPaymentsPerMonth> existingPayments = paymentsRepository.findAll().stream()
+                    .filter(p -> p.getInvolvedPerson() != null && p.getInvolvedPerson().getId().equals(involvedPerson.getId()))
+                    .toList();
+            paymentsRepository.deleteAll(existingPayments);
+
+            // Add new payments
+            involvedPersonDTO.getUtilityCostPaymentsPerMonthHistory().forEach(paymentDTO -> {
+                UtilityCostPaymentsPerMonth payments = paymentsMapper.toEntity(paymentDTO);
+                payments.setInvolvedPerson(involvedPerson);
+                paymentsRepository.save(payments);
+            });
+
+            optionalInvolvedPersonDTO.set(Optional.of(mapToDto(repository.save(involvedPerson))));
         });
 
         return optionalInvolvedPersonDTO.get();
@@ -54,8 +103,18 @@ public class InvolvedPersonServiceImpl implements InvolvedPersonService {
     @Override
     public Boolean deleteInvolvedPersonById(UUID id) {
 
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
+        Optional<InvolvedPerson> involvedPersonOpt = repository.findById(id);
+
+        if (involvedPersonOpt.isPresent()) {
+            InvolvedPerson involvedPerson = involvedPersonOpt.get();
+
+            List<UtilityCostPaymentsPerMonth> payments = paymentsRepository.findAll().stream()
+                    .filter(p -> p.getInvolvedPerson() != null && p.getInvolvedPerson().getId().equals(involvedPerson.getId()))
+                    .toList();
+            paymentsRepository.deleteAll(payments);
+
+            repository.delete(involvedPerson);
+
             return true;
         }
 

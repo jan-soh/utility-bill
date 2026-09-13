@@ -5,24 +5,28 @@
 <div class="overflow-x-auto shadow-md sm:rounded-lg">
   <table class="w-full text-sm text-left text-gray-500">
     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-      <tr>
-        <th scope="col" class="px-6 py-3">
-          Name
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Start of involvement
-        </th>
-        <th scope="col" class="px-6 py-3">
-          End of involvement
-        </th>
-      </tr>
+    <tr>
+      <th scope="col" class="px-6 py-3">
+        Name
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Start of involvement
+      </th>
+      <th scope="col" class="px-6 py-3">
+        End of involvement
+      </th>
+      <th scope="col" class="px-6 py-3">
+        Utility cost payments
+      </th>
+    </tr>
     </thead>
     <tbody>
       @for (involved of involvedList(); track involved.id) {
         <tr class="bg-white border-b hover:bg-gray-50">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{involved.name}}</td>
-          <td class="px-6 py-4">{{involved.startOfInvolvement}}</td>
-          <td class="px-6 py-4">{{involved.endOfInvolvement}}</td>
+          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ involved.name }}</td>
+          <td class="px-6 py-4">{{ involved.startOfInvolvement }}</td>
+          <td class="px-6 py-4">{{ involved.endOfInvolvement }}</td>
+          <td class="px-6 py-4">{{ getCurrentUtilityCostPaymentsPerMonth(involved).amount }}</td>
         </tr>
       }
     </tbody>
