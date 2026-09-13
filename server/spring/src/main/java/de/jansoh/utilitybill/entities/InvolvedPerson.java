@@ -15,14 +15,6 @@ import java.util.UUID;
 @Entity
 public class InvolvedPerson {
 
-    public InvolvedPerson() {
-
-    }
-
-    public InvolvedPerson(UUID id) {
-        this.id = id;
-    }
-
     @Id
     @GeneratedValue(generator = "UUID")
     @UuidGenerator

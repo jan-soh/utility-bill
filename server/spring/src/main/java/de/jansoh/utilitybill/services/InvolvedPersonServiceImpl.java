@@ -20,12 +20,12 @@ public class InvolvedPersonServiceImpl implements InvolvedPersonService {
 
     @Override
     public List<InvolvedPersonDTO> listInvolvedPersons() {
-        return repository.findAll().stream().map(involvedPersonMapper::toDto).toList();
+        return repository.findAllWithUtilityCostPaymentsPerMonthHistory().stream().map(involvedPersonMapper::toDto).toList();
     }
 
     @Override
     public Optional<InvolvedPersonDTO> getInvolvedPersonById(UUID id) {
-        return repository.findById(id).map(involvedPersonMapper::toDto);
+        return repository.findByIdWithUtilityCostPaymentsPerMonthHistory(id).map(involvedPersonMapper::toDto);
     }
 
     @Override
