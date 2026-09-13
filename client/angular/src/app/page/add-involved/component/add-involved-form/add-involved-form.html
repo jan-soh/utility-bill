@@ -22,16 +22,7 @@
     <input id="utility-cost-payments-per-month-amount" type="text" [(ngModel)]="utilityCostPaymentsPerMonth().amount"
            (ngModelChange)="reset()"/>
   </div>
-  <div class="form-group">
-    <label for="utility-cost-payments-per-month-valid-from">Start of utility cost payments:</label>
-    <input id="utility-cost-payments-per-month-valid-from" type="date"
-           [(ngModel)]="utilityCostPaymentsPerMonth().validFrom" (ngModelChange)="reset()"/>
-  </div>
-  <div class="form-group">
-    <label for="utility-cost-payments-per-month-valid-to">Start of utility cost payments:</label>
-    <input id="utility-cost-payments-per-month-valid-to" type="date" [(ngModel)]="utilityCostPaymentsPerMonth().validTo"
-           (ngModelChange)="reset()"/>
-  </div>
+
   <div class="button-group">
     <button class="save-button" (click)="save()">Save</button>
   </div>

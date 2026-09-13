@@ -27,6 +27,12 @@ export class AddInvolvedForm {
 
     if (this.isValidForSave()) {
       this.isSaving = true;
+
+      this.utilityCostPaymentsPerMonth.update(payments => {
+        payments.validFrom = new Date(this.involvedPerson().startOfInvolvement);
+        return payments;
+      });
+
       this.involvedPerson().utilityCostPaymentsPerMonthHistory.push(this.utilityCostPaymentsPerMonth());
 
       this.involvedPersonSubject.apply(this.involvedPerson()).subscribe(
@@ -52,10 +58,6 @@ export class AddInvolvedForm {
     }
     if (!this.utilityCostPaymentsPerMonth().amount) {
       this.actionMessage.set('Shared amount of utility  payments is required');
-      return false;
-    }
-    if (!this.utilityCostPaymentsPerMonth().validFrom) {
-      this.actionMessage.set('Start of utility cost payments is required');
       return false;
     }
 
