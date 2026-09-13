@@ -56,3 +56,25 @@
 .save-button:active {
   background-color: #0062cc;
 }
+
+.error-message {
+  color: #dc3545;
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+  text-align: center;
+}
+
+.action-message {
+  color: #2ad987;
+  background-color: #d1f1e2;
+  border: 1px solid #96debd;
+  padding: 10px;
+  border-radius: 4px;
+  margin-top: 15px;
+  font-size: 14px;
+  text-align: center;
+}
