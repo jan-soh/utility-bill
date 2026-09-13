@@ -1,4 +1,4 @@
-<h2>Involved persons</h2>
+<h2>Edit utility cost payments</h2>
 <div *ngIf="error()" class="error-message">
   {{ error() }}
 </div>
@@ -7,16 +7,13 @@
     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
     <tr>
       <th scope="col" class="px-6 py-3">
-        Name
+        Monthly amount
       </th>
       <th scope="col" class="px-6 py-3">
-        Start of involvement
+        Valid from
       </th>
       <th scope="col" class="px-6 py-3">
-        End of involvement
-      </th>
-      <th scope="col" class="px-6 py-3">
-        Utility cost payments
+        Valid to
       </th>
       <th scope="col" class="px-6 py-3">
         Actions
@@ -24,20 +21,21 @@
     </tr>
     </thead>
     <tbody>
-      @for (involved of involvedList(); track involved.id) {
+      @for (payment of paymentHistory(); track payment.id) {
         <tr class="bg-white border-b hover:bg-gray-50">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ involved.name }}</td>
-          <td class="px-6 py-4">{{ involved.startOfInvolvement }}</td>
-          <td class="px-6 py-4">{{ involved.endOfInvolvement }}</td>
-          <td class="px-6 py-4">{{ getCurrentUtilityCostPaymentsPerMonth(involved).amount }}</td>
+          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ payment.amount }}</td>
+          <td class="px-6 py-4">{{ payment.validFrom }}</td>
+          <td class="px-6 py-4">{{ payment.validTo }}</td>
           <td class="px-6 py-4">
             <div class="button-group">
-              <button class="save-button" (click)="edit(involved)">Edit</button>
+              <button class="delete-button" (click)="delete(payment)">Delete</button>
             </div>
           </td>
         </tr>
       }
     </tbody>
   </table>
+  <div class="button-group">
+    <button class="save-button" (click)="create()">Create</button>
+  </div>
 </div>
-

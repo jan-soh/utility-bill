@@ -39,6 +39,7 @@ export class AddInvolvedForm {
         success => {
           if (success) {
             this.involvedPerson.set(new InvolvedPerson());
+            this.utilityCostPaymentsPerMonth.set(new UtilityCostPaymentsPerMonth());
             this.actionMessage.set('Involved person added successfully');
           }
           this.isSaving = false;

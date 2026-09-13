@@ -1,8 +1,8 @@
-import {Component, computed, inject} from '@angular/core';
+import {Component, inject, output} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
-import {DatePipe, NgIf} from '@angular/common';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'add-involved-list',
@@ -12,9 +12,10 @@ import {DatePipe, NgIf} from '@angular/common';
 })
 export class AddInvolvedList {
 
-  private involvedSubject = inject(InvolvedPersonSubject);
+  private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   public involvedList = this.involvedSubject.involvedPersons;
   public error = this.involvedSubject.error;
+  public involvedPersonSelected = output<InvolvedPerson>();
 
   public getCurrentUtilityCostPaymentsPerMonth(involvedPerson: InvolvedPerson): UtilityCostPaymentsPerMonth {
 
@@ -30,5 +31,9 @@ export class AddInvolvedList {
       }
     });
     return currentUtilityCostPaymentsPerMonth;
+  }
+
+  public edit(involvedPerson: InvolvedPerson) {
+    this.involvedPersonSelected.emit(involvedPerson);
   }
 }

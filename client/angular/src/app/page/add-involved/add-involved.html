@@ -9,9 +9,13 @@
     <p>Add another involved person.</p>
   </div>
   <div class="page-content-container">
-    <add-involved-list></add-involved-list>
+    <add-involved-list (involvedPersonSelected)="setInvolvedPersonSelected($event)"></add-involved-list>
     <div style="height: 30px"></div>
     <add-involved-form></add-involved-form>
+    @if (involvedPersonSelected(); as involvedPerson) {
+      <div style="height: 30px"></div>
+      <edit-involved-person [involvedPerson]="involvedPerson"></edit-involved-person>
+    }
   </div>
 </div>
 
