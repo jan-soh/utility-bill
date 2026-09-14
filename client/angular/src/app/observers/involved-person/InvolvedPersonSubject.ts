@@ -1,6 +1,6 @@
 import {Injectable, signal, inject, Signal} from '@angular/core';
-import {InvolvedPerson} from '../model/InvolvedPerson';
-import {InvolvedPersonService} from './InvolvedPersonService';
+import {InvolvedPerson} from '../../model/InvolvedPerson';
+import {InvolvedPersonService} from '../../service/InvolvedPersonService';
 import {catchError, map, Observable, of, tap} from 'rxjs';
 
 @Injectable({

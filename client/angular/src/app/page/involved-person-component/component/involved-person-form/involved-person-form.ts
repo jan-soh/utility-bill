@@ -1,7 +1,7 @@
 import {Component, inject, input, output, signal} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
-import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
+import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 

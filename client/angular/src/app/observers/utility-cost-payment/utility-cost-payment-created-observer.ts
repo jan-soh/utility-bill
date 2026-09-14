@@ -1,4 +1,4 @@
-import {UtilityCostPayment} from '../../model/utility-cost-payment';
+import {UtilityCostPayment} from '../../model/UtilityCostPayment';
 
 export interface UtilityCostPaymentCreatedObserver {
   utilityCostPaymentCreated(utilityCostPayment: UtilityCostPayment): void;

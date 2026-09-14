@@ -1,5 +1,5 @@
 import {Component, inject, output} from '@angular/core';
-import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
+import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {NgIf} from '@angular/common';
