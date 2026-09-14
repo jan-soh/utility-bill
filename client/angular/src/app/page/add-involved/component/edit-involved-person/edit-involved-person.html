@@ -1,41 +1,29 @@
-<h2>Edit utility cost payments</h2>
-<div *ngIf="error()" class="error-message">
-  {{ error() }}
-</div>
-<div class="overflow-x-auto shadow-md sm:rounded-lg">
-  <table class="w-full text-sm text-left text-gray-500">
-    <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-    <tr>
-      <th scope="col" class="px-6 py-3">
-        Monthly amount
-      </th>
-      <th scope="col" class="px-6 py-3">
-        Valid from
-      </th>
-      <th scope="col" class="px-6 py-3">
-        Valid to
-      </th>
-      <th scope="col" class="px-6 py-3">
-        Actions
-      </th>
-    </tr>
-    </thead>
-    <tbody>
-      @for (payment of paymentHistory(); track payment.id) {
-        <tr class="bg-white border-b hover:bg-gray-50">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ payment.amount }}</td>
-          <td class="px-6 py-4">{{ payment.validFrom }}</td>
-          <td class="px-6 py-4">{{ payment.validTo }}</td>
-          <td class="px-6 py-4">
-            <div class="button-group">
-              <button class="delete-button" (click)="delete(payment)">Delete</button>
-            </div>
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
+<h2>Add a new utility cost payments for {{ involvedPerson().name }}</h2>
+
+<div class="form-container">
+  <div class="form-group">
+    <label for="amount">Amount:</label>
+    <input id="amount" type="number"/>
+  </div>
+
+  <div class="form-group">
+    <label for="valid-from">Valid from:</label>
+    <input id="valid-from" type="date"/>
+  </div>
+
+  <div class="form-group">
+    <label for="valid-to">Valid to:</label>
+    <input id="valid-to" type="date"/>
+  </div>
+
   <div class="button-group">
-    <button class="save-button" (click)="create()">Create</button>
+    <button class="save-button" (click)="save()">Save</button>
+  </div>
+
+  <div *ngIf="error()" class="error-message">
+    {{ error() }}
+  </div>
+  <div *ngIf="actionMessage()" class="action-message">
+    {{ actionMessage() }}
   </div>
 </div>

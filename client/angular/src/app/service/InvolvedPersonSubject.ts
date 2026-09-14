@@ -9,6 +9,8 @@ import {catchError, map, Observable, of, tap} from 'rxjs';
 export class InvolvedPersonSubject {
   private involvedService = inject(InvolvedPersonService);
   private involvedPersonsSignal = signal<InvolvedPerson[]>([]);
+  private selectedInvolvedPersonSignal = signal<InvolvedPerson | null>(null);
+
   private errorSignal = signal<string | null>(null);
 
   public readonly involvedPersons: Signal<InvolvedPerson[]> = this.involvedPersonsSignal.asReadonly();

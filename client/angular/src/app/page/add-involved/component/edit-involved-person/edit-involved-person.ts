@@ -1,4 +1,4 @@
-import {Component, computed, inject, input} from '@angular/core';
+import {Component, computed, inject, input, signal} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
@@ -12,19 +12,19 @@ import {NgIf} from '@angular/common';
 })
 export class EditInvolvedPerson {
 
-  private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
-  public error = this.involvedSubject.error;
+  private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
+  public error = this.involvedPersonSubject.error;
   public involvedPerson = input.required<InvolvedPerson>();
-  public paymentHistory = computed(() => this.involvedPerson().utilityCostPaymentsPerMonthHistory);
+  public utilityCostPayments = input.required<UtilityCostPaymentsPerMonth>();
+  actionMessage = signal<string | null>(null);
 
-  constructor() {
+
+  public save() {
+
   }
 
-  public delete(payment: UtilityCostPaymentsPerMonth): void {
-
-  }
-
-  public create(): void {
-
+  public reset(): void {
+    this.actionMessage.set(null);
+    this.involvedPersonSubject.clearError();
   }
 }

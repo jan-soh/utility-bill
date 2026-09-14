@@ -45,11 +45,35 @@
   transition: background-color 0.2s;
 }
 
+.delete-button {
+  background-color: #eb7171;
+}
+
+.delete-button:hover {
+  background-color: #e8a4a4;
+}
+
+.delete-button:active {
+  background-color: #c77878;
+}
+
+.edit-button {
+  background-color: #007bff;
+}
+
+.edit-button:hover {
+  background-color: #0069d9;
+}
+
+.edit-button:active {
+  background-color: #0062cc;
+}
+
 .button-group {
   margin-top: 20px;
 }
 
-.save-button {
+.add-button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -57,15 +81,15 @@
   border-radius: 4px;
   cursor: pointer;
   font-size: 16px;
-  width: 100%;
+  width: 120px;
   transition: background-color 0.2s;
 }
 
-.save-button:hover {
+.add-button:hover {
   background-color: #0069d9;
 }
 
-.save-button:active {
+.add-button:active {
   background-color: #0062cc;
 }
 

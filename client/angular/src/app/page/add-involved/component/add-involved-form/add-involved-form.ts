@@ -1,4 +1,4 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, inject, input, output, signal} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
@@ -15,7 +15,8 @@ export class AddInvolvedForm {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 
-  involvedPerson = signal<InvolvedPerson>(new InvolvedPerson());
+  public involvedPerson = input.required<InvolvedPerson>();
+  public saved = output<void>();
   utilityCostPaymentsPerMonth = signal<UtilityCostPaymentsPerMonth>(new UtilityCostPaymentsPerMonth());
 
   error = this.involvedPersonSubject.error;
@@ -38,9 +39,9 @@ export class AddInvolvedForm {
       this.involvedPersonSubject.apply(this.involvedPerson()).subscribe(
         success => {
           if (success) {
-            this.involvedPerson.set(new InvolvedPerson());
             this.utilityCostPaymentsPerMonth.set(new UtilityCostPaymentsPerMonth());
             this.actionMessage.set('Involved person added successfully');
+            this.saved.emit();
           }
           this.isSaving = false;
         }

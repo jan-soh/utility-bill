@@ -1,19 +1,23 @@
-.edit-button {
+.button-group {
+  margin-top: 20px;
+}
+
+.add-button {
   background-color: #007bff;
   color: white;
   border: none;
-  padding: 3px;
+  padding: 10px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 12px;
-  width: 40px;
+  font-size: 16px;
+  width: 120px;
   transition: background-color 0.2s;
 }
 
-.edit-button:hover {
+.add-button:hover {
   background-color: #0069d9;
 }
 
-.edit-button:active {
+.add-button:active {
   background-color: #0062cc;
 }

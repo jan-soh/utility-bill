@@ -2,19 +2,33 @@
 
 </style>
 
-
 <div class="page-container">
   <div class="page-title-container">
     <h1 class="page-title-text">Add Involved</h1>
+
+    <div style="height: 30px"></div>
+
     <p>Add another involved person.</p>
   </div>
   <div class="page-content-container">
     <add-involved-list (involvedPersonSelected)="setInvolvedPersonSelected($event)"></add-involved-list>
-    <div style="height: 30px"></div>
-    <add-involved-form></add-involved-form>
+    <div class="button-group">
+      <button class="add-button" (click)="add()">Add</button>
+    </div>
     @if (involvedPersonSelected(); as involvedPerson) {
+
       <div style="height: 30px"></div>
-      <edit-involved-person [involvedPerson]="involvedPerson"></edit-involved-person>
+
+      <div style="display: flex; gap: 20px;">
+        <div style="flex: 1;">
+          <add-involved-form [involvedPerson]="involvedPerson" (saved)="clearSelection()"></add-involved-form>
+        </div>
+        @if (utilityCostPaymentsSelected(); as utilityCostPayments) {
+          <div style="flex: 1;">
+            <edit-involved-person [involvedPerson]="involvedPerson" [utilityCostPayments]="utilityCostPayments"></edit-involved-person>
+          </div>
+        }
+      </div>
     }
   </div>
 </div>
