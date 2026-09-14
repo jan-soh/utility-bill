@@ -1,15 +1,15 @@
 import {Component, signal} from '@angular/core';
-import {AddInvolvedList} from './component/add-involved-list/add-involved-list';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonForm} from './component/involved-person-form/involved-person-form';
 import {UtilityCostPaymentsPerMonth} from '../../model/UtilityCostPaymentsPerMonth';
 import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
+import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
 
 @Component({
   selector: 'add-involved',
   templateUrl: './add-involved.html',
   styleUrl: './add-involved.css',
-  imports: [InvolvedPersonForm, AddInvolvedList, UtilityCostPaymentsForm],
+  imports: [InvolvedPersonForm, InvolvedPersonList, UtilityCostPaymentsForm],
 })
 export class AddInvolved {
 

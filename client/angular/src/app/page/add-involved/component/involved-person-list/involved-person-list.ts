@@ -5,12 +5,12 @@ import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPayments
 import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'add-involved-list',
-  templateUrl: './add-involved-list.html',
-  styleUrl: './add-involved-list.css',
+  selector: 'involved-person-list',
+  templateUrl: './involved-person-list.html',
+  styleUrl: './involved-person-list.css',
   imports: [NgIf],
 })
-export class AddInvolvedList {
+export class InvolvedPersonList {
 
   private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   public involvedList = this.involvedSubject.involvedPersons;
