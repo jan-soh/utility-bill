@@ -5,12 +5,12 @@ import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPayments
 import {NgIf} from '@angular/common';
 
 @Component({
-  selector: 'edit-involved-person',
-  styleUrls: ['./edit-involved-person.css'],
-  templateUrl: './edit-involved-person.html',
+  selector: 'utility-cost-payments-form',
+  styleUrl: './utility-cost-payments-form.css',
+  templateUrl: './utility-cost-payments-form.html',
   imports: [NgIf],
 })
-export class EditInvolvedPerson {
+export class UtilityCostPaymentsForm {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   public error = this.involvedPersonSubject.error;

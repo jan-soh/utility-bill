@@ -23,10 +23,11 @@
         <div style="flex: 1;">
           <involved-person-form [involvedPerson]="involvedPerson" (saved)="clearSelection()"></involved-person-form>
         </div>
+        
         @if (utilityCostPaymentsSelected(); as utilityCostPayments) {
           <div style="flex: 1;">
-            <edit-involved-person [involvedPerson]="involvedPerson"
-                                  [utilityCostPayments]="utilityCostPayments"></edit-involved-person>
+            <utility-cost-payments-form [involvedPerson]="involvedPerson"
+                                  [utilityCostPayments]="utilityCostPayments"></utility-cost-payments-form>
           </div>
         }
       </div>

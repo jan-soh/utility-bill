@@ -3,13 +3,13 @@ import {AddInvolvedList} from './component/add-involved-list/add-involved-list';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonForm} from './component/involved-person-form/involved-person-form';
 import {UtilityCostPaymentsPerMonth} from '../../model/UtilityCostPaymentsPerMonth';
-import {EditInvolvedPerson} from './component/edit-involved-person/edit-involved-person';
+import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
 
 @Component({
   selector: 'add-involved',
   templateUrl: './add-involved.html',
   styleUrl: './add-involved.css',
-  imports: [InvolvedPersonForm, AddInvolvedList, EditInvolvedPerson],
+  imports: [InvolvedPersonForm, AddInvolvedList, UtilityCostPaymentsForm],
 })
 export class AddInvolved {
 
