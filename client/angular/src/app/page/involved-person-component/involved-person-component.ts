@@ -6,12 +6,12 @@ import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/ut
 import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
 
 @Component({
-  selector: 'add-involved',
-  templateUrl: './add-involved.html',
-  styleUrl: './add-involved.css',
+  selector: 'involved-person-component',
+  templateUrl: './involved-person-component.html',
+  styleUrl: './involved-person-component.css',
   imports: [InvolvedPersonForm, InvolvedPersonList, UtilityCostPaymentsForm],
 })
-export class AddInvolved {
+export class InvolvedPersonComponent {
 
   involvedPersonSelected = signal<InvolvedPerson | null>(null);
   utilityCostPaymentsSelected = signal<UtilityCostPaymentsPerMonth | null>(null);
