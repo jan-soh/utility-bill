@@ -1,8 +1,8 @@
 package de.jansoh.utilitybill.services;
 
-import de.jansoh.utilitybill.mappers.UtilityCostPaymentsPerMonthMapper;
-import de.jansoh.utilitybill.model.UtilityCostPaymentsPerMonthDTO;
-import de.jansoh.utilitybill.repositories.UtilityCostPaymentsPerMonthRepository;
+import de.jansoh.utilitybill.mappers.UtilityCostPaymentMapper;
+import de.jansoh.utilitybill.model.UtilityCostPaymentDTO;
+import de.jansoh.utilitybill.repositories.UtilityCostPaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -13,30 +13,30 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
-public class UtilityCostPaymentsPerMonthServiceImpl implements UtilityCostPaymentsPerMonthService {
+public class UtilityCostPaymentServiceImpl implements UtilityCostPaymentService {
 
-    private final UtilityCostPaymentsPerMonthRepository repository;
-    private final UtilityCostPaymentsPerMonthMapper mapper;
+    private final UtilityCostPaymentRepository repository;
+    private final UtilityCostPaymentMapper mapper;
 
     @Override
-    public List<UtilityCostPaymentsPerMonthDTO> list() {
+    public List<UtilityCostPaymentDTO> list() {
         return repository.findAll().stream().map(mapper::toDto).toList();
     }
 
     @Override
-    public Optional<UtilityCostPaymentsPerMonthDTO> getById(UUID id) {
+    public Optional<UtilityCostPaymentDTO> getById(UUID id) {
         return repository.findById(id).map(mapper::toDto);
     }
 
     @Override
-    public UtilityCostPaymentsPerMonthDTO save(UtilityCostPaymentsPerMonthDTO dto) {
+    public UtilityCostPaymentDTO save(UtilityCostPaymentDTO dto) {
         return mapper.toDto(repository.save(mapper.toEntity(dto)));
     }
 
     @Override
-    public Optional<UtilityCostPaymentsPerMonthDTO> update(UUID id, UtilityCostPaymentsPerMonthDTO dto) {
+    public Optional<UtilityCostPaymentDTO> update(UUID id, UtilityCostPaymentDTO dto) {
 
-        AtomicReference<Optional<UtilityCostPaymentsPerMonthDTO>> optionalDTO = new AtomicReference<>();
+        AtomicReference<Optional<UtilityCostPaymentDTO>> optionalDTO = new AtomicReference<>();
 
         repository.findById(id).ifPresent(payments -> {
 

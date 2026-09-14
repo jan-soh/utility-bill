@@ -1,7 +1,7 @@
 import {Component, inject, output} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {NgIf} from '@angular/common';
 
 @Component({
@@ -17,20 +17,20 @@ export class InvolvedPersonList {
   public error = this.involvedSubject.error;
   public involvedPersonSelected = output<InvolvedPerson>();
 
-  public getCurrentUtilityCostPaymentsPerMonth(involvedPerson: InvolvedPerson): UtilityCostPaymentsPerMonth {
+  public getCurrentUtilityCostPayment(involvedPerson: InvolvedPerson): UtilityCostPayment {
 
     let lastDate = new Date();
-    let currentUtilityCostPaymentsPerMonth: UtilityCostPaymentsPerMonth = new UtilityCostPaymentsPerMonth();
+    let currentUtilityCostPayment: UtilityCostPayment = new UtilityCostPayment();
 
     lastDate.setFullYear(0);
-    involvedPerson.utilityCostPaymentsPerMonthHistory.forEach(payments => {
+    involvedPerson.utilityCostPaymentHistory.forEach(payments => {
       const validFrom = new Date(payments.validFrom);
       if (validFrom > lastDate) {
         lastDate = validFrom;
-        currentUtilityCostPaymentsPerMonth = payments;
+        currentUtilityCostPayment = payments;
       }
     });
-    return currentUtilityCostPaymentsPerMonth;
+    return currentUtilityCostPayment;
   }
 
   public edit(involvedPerson: InvolvedPerson) {

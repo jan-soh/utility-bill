@@ -1,7 +1,6 @@
-import {Component, computed, inject, input, signal} from '@angular/core';
-import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
+import {Component, computed, input} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {NgIf} from '@angular/common';
 
 @Component({
@@ -12,17 +11,18 @@ import {NgIf} from '@angular/common';
 })
 export class UtilityCostPaymentsList {
 
+
   public involvedPerson = input.required<InvolvedPerson>();
-  public paymentHistory = computed(() => this.involvedPerson().utilityCostPaymentsPerMonthHistory);
+  public paymentHistory = computed(() => this.involvedPerson().utilityCostPaymentHistory);
 
   public add(): void {
   }
 
-  public delete(payment: UtilityCostPaymentsPerMonth): void {
+  public delete(payment: UtilityCostPayment): void {
 
   }
 
-  public edit(payment: UtilityCostPaymentsPerMonth): void {
+  public edit(payment: UtilityCostPayment): void {
 
   }
 }

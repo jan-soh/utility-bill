@@ -1,11 +1,11 @@
 package de.jansoh.utilitybill.services;
 
 import de.jansoh.utilitybill.entities.InvolvedPerson;
-import de.jansoh.utilitybill.entities.UtilityCostPaymentsPerMonth;
+import de.jansoh.utilitybill.entities.UtilityCostPayment;
 import de.jansoh.utilitybill.model.InvolvedPersonDTO;
-import de.jansoh.utilitybill.model.UtilityCostPaymentsPerMonthDTO;
+import de.jansoh.utilitybill.model.UtilityCostPaymentDTO;
 import de.jansoh.utilitybill.repositories.InvolvedPersonRepository;
-import de.jansoh.utilitybill.repositories.UtilityCostPaymentsPerMonthRepository;
+import de.jansoh.utilitybill.repositories.UtilityCostPaymentRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,7 +28,7 @@ public class InvolvedPersonServiceImplTest {
     InvolvedPersonRepository involvedPersonRepository;
 
     @Autowired
-    UtilityCostPaymentsPerMonthRepository paymentsRepository;
+    UtilityCostPaymentRepository paymentsRepository;
 
     @Test
     void testSaveNewPersonWithPayments() {
@@ -36,12 +36,12 @@ public class InvolvedPersonServiceImplTest {
         personDTO.setName("Test Person");
         personDTO.setStartOfInvolvement(LocalDate.now());
 
-        UtilityCostPaymentsPerMonthDTO paymentDTO = new InvolvedPersonServiceImplTest().createPaymentDTO();
-        personDTO.getUtilityCostPaymentsPerMonthHistory().add(paymentDTO);
+        UtilityCostPaymentDTO paymentDTO = new InvolvedPersonServiceImplTest().createPaymentDTO();
+        personDTO.getUtilityCostPaymentHistory().add(paymentDTO);
 
         InvolvedPersonDTO savedPerson = involvedPersonService.saveNewPerson(personDTO);
 
-        assertThat(savedPerson.getUtilityCostPaymentsPerMonthHistory()).hasSize(1);
+        assertThat(savedPerson.getUtilityCostPaymentHistory()).hasSize(1);
     }
 
     @Test
@@ -50,7 +50,7 @@ public class InvolvedPersonServiceImplTest {
         person.setName("Test Person 2");
         person.setStartOfInvolvement(LocalDate.now());
 
-        UtilityCostPaymentsPerMonth payment = new UtilityCostPaymentsPerMonth();
+        UtilityCostPayment payment = new UtilityCostPayment();
         payment.setAmount(new BigDecimal("100.00"));
         payment.setValidFrom(LocalDate.now());
         person.addUtilityCostPayment(payment);
@@ -65,11 +65,11 @@ public class InvolvedPersonServiceImplTest {
                 .findFirst()
                 .orElseThrow();
 
-        assertThat(personDTO.getUtilityCostPaymentsPerMonthHistory()).hasSize(1);
+        assertThat(personDTO.getUtilityCostPaymentHistory()).hasSize(1);
     }
 
-    private UtilityCostPaymentsPerMonthDTO createPaymentDTO() {
-        UtilityCostPaymentsPerMonthDTO dto = new UtilityCostPaymentsPerMonthDTO();
+    private UtilityCostPaymentDTO createPaymentDTO() {
+        UtilityCostPaymentDTO dto = new UtilityCostPaymentDTO();
         dto.setAmount(new BigDecimal("100.00"));
         dto.setValidFrom(LocalDate.now());
         return dto;

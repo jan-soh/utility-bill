@@ -20,19 +20,19 @@ public class InvolvedPersonServiceImpl implements InvolvedPersonService {
 
     @Override
     public List<InvolvedPersonDTO> listInvolvedPersons() {
-        return repository.findAllWithUtilityCostPaymentsPerMonthHistory().stream().map(involvedPersonMapper::toDto).toList();
+        return repository.findAllWithUtilityCostPaymentHistory().stream().map(involvedPersonMapper::toDto).toList();
     }
 
     @Override
     public Optional<InvolvedPersonDTO> getInvolvedPersonById(UUID id) {
-        return repository.findByIdWithUtilityCostPaymentsPerMonthHistory(id).map(involvedPersonMapper::toDto);
+        return repository.findByIdWithUtilityCostPaymentHistory(id).map(involvedPersonMapper::toDto);
     }
 
     @Override
     public InvolvedPersonDTO saveNewPerson(InvolvedPersonDTO involvedPersonDTO) {
         InvolvedPerson newInvolvedPerson = involvedPersonMapper.toEntity(involvedPersonDTO);
-        if (newInvolvedPerson.getUtilityCostPaymentsPerMonthHistory() != null) {
-            newInvolvedPerson.getUtilityCostPaymentsPerMonthHistory().forEach(payment -> payment.setInvolvedPerson(newInvolvedPerson));
+        if (newInvolvedPerson.getUtilityCostPaymentHistory() != null) {
+            newInvolvedPerson.getUtilityCostPaymentHistory().forEach(payment -> payment.setInvolvedPerson(newInvolvedPerson));
         }
         return involvedPersonMapper.toDto(repository.save(newInvolvedPerson));
     }
@@ -45,9 +45,9 @@ public class InvolvedPersonServiceImpl implements InvolvedPersonService {
             involvedPerson.setStartOfInvolvement(updatedEntity.getStartOfInvolvement());
             involvedPerson.setEndOfInvolvement(updatedEntity.getEndOfInvolvement());
 
-            involvedPerson.getUtilityCostPaymentsPerMonthHistory().clear();
-            if (updatedEntity.getUtilityCostPaymentsPerMonthHistory() != null) {
-                updatedEntity.getUtilityCostPaymentsPerMonthHistory().forEach(involvedPerson::addUtilityCostPayment);
+            involvedPerson.getUtilityCostPaymentHistory().clear();
+            if (updatedEntity.getUtilityCostPaymentHistory() != null) {
+                updatedEntity.getUtilityCostPaymentHistory().forEach(involvedPerson::addUtilityCostPayment);
             }
 
             return involvedPersonMapper.toDto(repository.save(involvedPerson));

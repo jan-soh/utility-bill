@@ -8,10 +8,10 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface InvolvedPersonMapper {
 
-    @Mapping(target = "utilityCostPaymentsPerMonthHistory", source = "utilityCostPaymentsPerMonthHistory")
+    @Mapping(target = "utilityCostPaymentHistory", source = "utilityCostPaymentHistory")
     InvolvedPersonDTO toDto(InvolvedPerson involvedPerson);
 
 
-    @Mapping(target = "utilityCostPaymentsPerMonthHistory", source = "utilityCostPaymentsPerMonthHistory")
+    @Mapping(target = "utilityCostPaymentHistory", source = "utilityCostPaymentHistory")
     InvolvedPerson toEntity(InvolvedPersonDTO involvedPersonDTO);
 }

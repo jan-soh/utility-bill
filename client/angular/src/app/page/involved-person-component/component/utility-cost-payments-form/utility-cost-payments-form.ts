@@ -1,7 +1,7 @@
-import {Component, computed, inject, input, signal} from '@angular/core';
+import {Component, inject, input, signal} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {NgIf} from '@angular/common';
 
 @Component({
@@ -15,7 +15,7 @@ export class UtilityCostPaymentsForm {
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   public error = this.involvedPersonSubject.error;
   public involvedPerson = input.required<InvolvedPerson>();
-  public utilityCostPayments = input.required<UtilityCostPaymentsPerMonth>();
+  public utilityCostPayments = input.required<UtilityCostPayment>();
   actionMessage = signal<string | null>(null);
 
 

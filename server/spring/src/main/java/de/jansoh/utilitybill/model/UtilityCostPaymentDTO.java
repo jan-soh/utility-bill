@@ -9,7 +9,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UtilityCostPaymentsPerMonthDTO {
+public class UtilityCostPaymentDTO {
 
     private UUID id;
     private UUID involvedPersonId;

@@ -1,7 +1,7 @@
 import {Component, signal} from '@angular/core';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonForm} from './component/involved-person-form/involved-person-form';
-import {UtilityCostPaymentsPerMonth} from '../../model/UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from '../../model/UtilityCostPayment';
 import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
 import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
 
@@ -14,7 +14,7 @@ import {InvolvedPersonList} from './component/involved-person-list/involved-pers
 export class InvolvedPersonComponent {
 
   involvedPersonSelected = signal<InvolvedPerson | null>(null);
-  utilityCostPaymentsSelected = signal<UtilityCostPaymentsPerMonth | null>(null);
+  utilityCostPaymentsSelected = signal<UtilityCostPayment | null>(null);
 
   public setInvolvedPersonSelected(involvedPerson: InvolvedPerson) {
     this.involvedPersonSelected.set(involvedPerson);

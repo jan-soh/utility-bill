@@ -33,7 +33,7 @@
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ involved.name }}</td>
           <td class="px-6 py-4">{{ involved.startOfInvolvement }}</td>
           <td class="px-6 py-4">{{ involved.endOfInvolvement }}</td>
-          <td class="px-6 py-4">{{ getCurrentUtilityCostPaymentsPerMonth(involved).amount }}</td>
+          <td class="px-6 py-4">{{ getCurrentUtilityCostPayment(involved).amount }}</td>
           <td class="px-6 py-4">
             <button class="edit-button" (click)="edit(involved)">Edit</button>
           </td>

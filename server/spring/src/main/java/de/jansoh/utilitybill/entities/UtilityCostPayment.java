@@ -12,7 +12,7 @@ import java.util.UUID;
 @Getter
 @Setter
 @Entity
-public class UtilityCostPaymentsPerMonth {
+public class UtilityCostPayment {
 
     @Id
     @GeneratedValue(generator = "UUID")

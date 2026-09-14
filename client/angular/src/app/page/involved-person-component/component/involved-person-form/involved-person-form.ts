@@ -1,6 +1,6 @@
 import {Component, inject, input, output, signal} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {UtilityCostPaymentsPerMonth} from '../../../../model/UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {InvolvedPersonSubject} from '../../../../service/InvolvedPersonSubject';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
@@ -17,7 +17,7 @@ export class InvolvedPersonForm {
 
   public involvedPerson = input.required<InvolvedPerson>();
   public saved = output<void>();
-  utilityCostPaymentsPerMonth = signal<UtilityCostPaymentsPerMonth>(new UtilityCostPaymentsPerMonth());
+  utilityCostPayment = signal<UtilityCostPayment>(new UtilityCostPayment());
 
   error = this.involvedPersonSubject.error;
   actionMessage = signal<string | null>(null);
@@ -29,17 +29,17 @@ export class InvolvedPersonForm {
     if (this.isValidForSave()) {
       this.isSaving = true;
 
-      this.utilityCostPaymentsPerMonth.update(payments => {
+      this.utilityCostPayment.update(payments => {
         payments.validFrom = new Date(this.involvedPerson().startOfInvolvement);
         return payments;
       });
 
-      this.involvedPerson().utilityCostPaymentsPerMonthHistory.push(this.utilityCostPaymentsPerMonth());
+      this.involvedPerson().utilityCostPaymentHistory.push(this.utilityCostPayment());
 
       this.involvedPersonSubject.apply(this.involvedPerson()).subscribe(
         success => {
           if (success) {
-            this.utilityCostPaymentsPerMonth.set(new UtilityCostPaymentsPerMonth());
+            this.utilityCostPayment.set(new UtilityCostPayment());
             this.actionMessage.set('Involved person added successfully');
             this.saved.emit();
           }
@@ -56,10 +56,6 @@ export class InvolvedPersonForm {
     }
     if (!this.involvedPerson().startOfInvolvement) {
       this.actionMessage.set('Start of involvement is required');
-      return false;
-    }
-    if (!this.utilityCostPaymentsPerMonth().amount) {
-      this.actionMessage.set('Shared amount of utility  payments is required');
       return false;
     }
 

@@ -1,4 +1,4 @@
-import {UtilityCostPaymentsPerMonth} from './UtilityCostPaymentsPerMonth';
+import {UtilityCostPayment} from './UtilityCostPayment';
 
 export class InvolvedPerson {
 
@@ -6,5 +6,5 @@ export class InvolvedPerson {
   name: string = '';
   startOfInvolvement: string = '';
   endOfInvolvement: string = '';
-  utilityCostPaymentsPerMonthHistory: UtilityCostPaymentsPerMonth[] = [];
+  utilityCostPaymentHistory: UtilityCostPayment[] = [];
 }

@@ -11,9 +11,9 @@ import java.util.UUID;
 
 public interface InvolvedPersonRepository extends JpaRepository<InvolvedPerson, UUID> {
 
-    @Query("select distinct ip from InvolvedPerson ip left join fetch ip.utilityCostPaymentsPerMonthHistory")
-    List<InvolvedPerson> findAllWithUtilityCostPaymentsPerMonthHistory();
+    @Query("select distinct ip from InvolvedPerson ip left join fetch ip.utilityCostPaymentHistory")
+    List<InvolvedPerson> findAllWithUtilityCostPaymentHistory();
 
-    @Query("select ip from InvolvedPerson ip left join fetch ip.utilityCostPaymentsPerMonthHistory where ip.id = :id")
-    Optional<InvolvedPerson> findByIdWithUtilityCostPaymentsPerMonthHistory(@Param("id") UUID id);
+    @Query("select ip from InvolvedPerson ip left join fetch ip.utilityCostPaymentHistory where ip.id = :id")
+    Optional<InvolvedPerson> findByIdWithUtilityCostPaymentHistory(@Param("id") UUID id);
 }

@@ -18,5 +18,5 @@ public class InvolvedPersonDTO {
     private String name;
     private LocalDate startOfInvolvement;
     private LocalDate endOfInvolvement;
-    private List<UtilityCostPaymentsPerMonthDTO> utilityCostPaymentsPerMonthHistory = new ArrayList<>();
+    private List<UtilityCostPaymentDTO> utilityCostPaymentHistory = new ArrayList<>();
 }
