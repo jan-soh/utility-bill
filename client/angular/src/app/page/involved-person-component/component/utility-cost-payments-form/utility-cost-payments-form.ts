@@ -13,7 +13,6 @@ import {NgIf} from '@angular/common';
 export class UtilityCostPaymentsForm {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
-  public error = this.involvedPersonSubject.error;
   public involvedPerson = input.required<InvolvedPerson>();
   public utilityCostPayments = input.required<UtilityCostPayment>();
   actionMessage = signal<string | null>(null);
@@ -25,6 +24,5 @@ export class UtilityCostPaymentsForm {
 
   public reset(): void {
     this.actionMessage.set(null);
-    this.involvedPersonSubject.clearError();
   }
 }

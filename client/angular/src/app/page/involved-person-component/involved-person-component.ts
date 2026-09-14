@@ -1,9 +1,10 @@
-import {Component, signal} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonForm} from './component/involved-person-form/involved-person-form';
 import {UtilityCostPayment} from '../../model/UtilityCostPayment';
 import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
 import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
+import {InvolvedPersonSubject} from '../../observers/involved-person/InvolvedPersonSubject';
 
 @Component({
   selector: 'involved-person-component',
@@ -15,16 +16,13 @@ export class InvolvedPersonComponent {
 
   involvedPersonSelected = signal<InvolvedPerson | null>(null);
   utilityCostPaymentsSelected = signal<UtilityCostPayment | null>(null);
+  involvedPersonSubject = inject(InvolvedPersonSubject);
 
   public setInvolvedPersonSelected(involvedPerson: InvolvedPerson) {
     this.involvedPersonSelected.set(involvedPerson);
   }
 
   public add(): void {
-    this.involvedPersonSelected.set(new InvolvedPerson());
-  }
-
-  public clearSelection(): void {
-    this.involvedPersonSelected.set(null);
+    this.involvedPersonSubject.addInvolvedPerson();
   }
 }

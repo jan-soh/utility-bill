@@ -19,10 +19,7 @@
   <div class="button-group">
     <button class="save-button" (click)="save()">Save</button>
   </div>
-
-  <div *ngIf="error()" class="error-message">
-    {{ error() }}
-  </div>
+  
   <div *ngIf="actionMessage()" class="action-message">
     {{ actionMessage() }}
   </div>

@@ -1,7 +1,9 @@
-import {Injectable, signal, inject, Signal} from '@angular/core';
+import {inject, Injectable, signal, Signal} from '@angular/core';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonService} from '../../service/InvolvedPersonService';
-import {catchError, map, Observable, of, tap} from 'rxjs';
+import {catchError, of, tap} from 'rxjs';
+import {InvolvedPersonAddedObserver} from './InvolvedPersonAddedObserver';
+import {InvolvedPersonCreatedObserver} from './InvolvedPersonCreatedObserver';
 
 @Injectable({
   providedIn: 'root'
@@ -11,15 +13,15 @@ export class InvolvedPersonSubject {
   private involvedPersonsSignal = signal<InvolvedPerson[]>([]);
   private selectedInvolvedPersonSignal = signal<InvolvedPerson | null>(null);
 
-  private errorSignal = signal<string | null>(null);
+  private involvedPersonAdded: InvolvedPerson | null = null;
+  private readonly involvedPersonAddedObservers: InvolvedPersonAddedObserver[] = [];
+  private readonly involvedPersonCreatedObservers: InvolvedPersonCreatedObserver[] = [];
 
   public readonly involvedPersons: Signal<InvolvedPerson[]> = this.involvedPersonsSignal.asReadonly();
-  public readonly error: Signal<string | null> = this.errorSignal.asReadonly();
 
   constructor() {
     this.involvedService.findAll().pipe(
       catchError(err => {
-        this.errorSignal.set('Failed to load involved persons.');
         return of([]);
       })
     ).subscribe(persons => {
@@ -27,9 +29,37 @@ export class InvolvedPersonSubject {
     });
   }
 
-  public apply(involvedPerson: InvolvedPerson): Observable<boolean> {
-    this.errorSignal.set(null);
-    return this.involvedService.save(involvedPerson).pipe(
+  public registerInvolvedPersonAddedObserver(observer: InvolvedPersonAddedObserver): void {
+    this.involvedPersonAddedObservers.push(observer);
+  }
+
+  public notifyInvolvedPersonAdded(involvedPerson: InvolvedPerson): void {
+    this.involvedPersonAddedObservers.forEach(observer => observer.involvedPersonAdded(involvedPerson));
+  }
+
+  public registerInvolvedPersonCreatedObserver(observer: InvolvedPersonCreatedObserver): void {
+    this.involvedPersonCreatedObservers.push(observer);
+  }
+
+  public notifyInvolvedPersonCreated(involvedPerson: InvolvedPerson): void {
+    this.involvedPersonCreatedObservers.forEach(observer => observer.involvedPersonCreated(involvedPerson));
+  }
+
+  public notifyInvolvedPersonCreatedError(errorMessage: string): void {
+    this.involvedPersonCreatedObservers.forEach(observer => observer.involvedPersonCreatedError(errorMessage));
+  }
+
+  public addInvolvedPerson(): void {
+    this.involvedPersonAdded = new InvolvedPerson();
+    this.notifyInvolvedPersonAdded(this.involvedPersonAdded);
+  }
+
+  public createInvolvedPerson(): void {
+    if (!this.involvedPersonAdded) {
+      return;
+    }
+
+    this.involvedService.save(this.involvedPersonAdded).pipe(
       tap(savedInvolvedPerson => {
         this.involvedPersonsSignal.update(current => {
           const index = current.findIndex(p => p.id === savedInvolvedPerson.id);
@@ -39,16 +69,12 @@ export class InvolvedPersonSubject {
             return [...current, savedInvolvedPerson];
           }
         });
+        this.notifyInvolvedPersonCreated(savedInvolvedPerson);
       }),
-      map(() => true),
-      catchError(() => {
-        this.errorSignal.set('Failed to save involved person.');
-        return of(false);
+      catchError((err) => {
+        this.notifyInvolvedPersonCreatedError("Failed to create involved person.");
+        return of(null);
       })
-    );
-  }
-
-  public clearError(): void {
-    this.errorSignal.set(null);
+    ).subscribe();
   }
 }

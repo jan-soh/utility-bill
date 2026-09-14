@@ -15,23 +15,24 @@
     <div class="button-group">
       <button class="add-button" (click)="add()">Add</button>
     </div>
-    @if (involvedPersonSelected(); as involvedPerson) {
 
-      <div style="height: 30px"></div>
+    <div style="height: 30px"></div>
 
-      <div style="display: flex; gap: 20px;">
-        <div style="flex: 1;">
-          <involved-person-form [involvedPerson]="involvedPerson" (saved)="clearSelection()"></involved-person-form>
-        </div>
+    <div style="display: flex; gap: 20px;">
+      <div style="flex: 1;">
+        <involved-person-form></involved-person-form>
+      </div>
+
+      @if (involvedPersonSelected(); as involvedPerson) {
 
         @if (utilityCostPaymentsSelected(); as utilityCostPayments) {
           <div style="flex: 1;">
             <utility-cost-payments-form [involvedPerson]="involvedPerson"
-                                  [utilityCostPayments]="utilityCostPayments"></utility-cost-payments-form>
+                                        [utilityCostPayments]="utilityCostPayments"></utility-cost-payments-form>
           </div>
         }
-      </div>
-    }
+      }
+    </div>
   </div>
 </div>
 

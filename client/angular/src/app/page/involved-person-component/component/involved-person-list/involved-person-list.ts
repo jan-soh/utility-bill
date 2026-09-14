@@ -14,7 +14,6 @@ export class InvolvedPersonList {
 
   private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   public involvedList = this.involvedSubject.involvedPersons;
-  public error = this.involvedSubject.error;
   public involvedPersonSelected = output<InvolvedPerson>();
 
   public getCurrentUtilityCostPayment(involvedPerson: InvolvedPerson): UtilityCostPayment {

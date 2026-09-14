@@ -1,31 +1,32 @@
-<h2>Add a new involved person</h2>
-<div class="form-container">
-  <div class="form-group">
-    <label for="name">Name:</label>
-    <input id="name" type="text" [(ngModel)]="involvedPerson().name" (ngModelChange)="reset()"/>
-  </div>
+@if (visible() && involvedPerson(); as involvedPerson) {
+  <h2>Add a new involved person</h2>
+  <div class="form-container">
+    <div class="form-group">
+      <label for="name">Name:</label>
+      <input id="name" type="text" [(ngModel)]="involvedPerson.name" [disabled]="saving"/>
+    </div>
 
-  <div class="form-group">
-    <label for="start-of-involvement">Start of involvement:</label>
-    <input id="start-of-involvement" type="date" [(ngModel)]="involvedPerson().startOfInvolvement"
-           (ngModelChange)="reset()"/>
-  </div>
+    <div class="form-group">
+      <label for="start-of-involvement">Start of involvement:</label>
+      <input id="start-of-involvement" type="date" [(ngModel)]="involvedPerson.startOfInvolvement"
+             [disabled]="saving"/>
+    </div>
 
-  <div class="form-group">
-    <label for="end-of-involvement">End of involvement:</label>
-    <input id="end-of-involvement" type="date" [(ngModel)]="involvedPerson().endOfInvolvement"
-           (ngModelChange)="reset()"/>
-  </div>
+    <div class="form-group">
+      <label for="end-of-involvement">End of involvement:</label>
+      <input id="end-of-involvement" type="date" [(ngModel)]="involvedPerson.endOfInvolvement"
+             [disabled]="saving"/>
+    </div>
 
-  <div class="button-group">
-    <button class="save-button" (click)="save()">Save</button>
-  </div>
+    <div class="button-group">
+      <button class="save-button" (click)="save()" [disabled]="saving">{{ saving ? 'Saving...' : 'Save' }}</button>
+    </div>
 
-  <div *ngIf="error()" class="error-message">
-    {{ error() }}
+    <div *ngIf="errorMessage()" class="error-message">
+      {{ errorMessage() }}
+    </div>
+    <div *ngIf="actionMessage()" class="action-message">
+      {{ actionMessage() }}
+    </div>
   </div>
-  <div *ngIf="actionMessage()" class="action-message">
-    {{ actionMessage() }}
-  </div>
-</div>
-
+}
