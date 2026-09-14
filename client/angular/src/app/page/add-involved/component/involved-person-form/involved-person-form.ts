@@ -6,12 +6,12 @@ import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 
 @Component({
-  selector: 'add-involved-form',
-  templateUrl: './add-involved-form.html',
-  styleUrl: './add-involved-form.css',
+  selector: 'involved-person-form',
+  templateUrl: './involved-person-form.html',
+  styleUrl: './involved-person-form.css',
   imports: [FormsModule, CommonModule],
 })
-export class AddInvolvedForm {
+export class InvolvedPersonForm {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 

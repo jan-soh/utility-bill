@@ -21,11 +21,12 @@
 
       <div style="display: flex; gap: 20px;">
         <div style="flex: 1;">
-          <add-involved-form [involvedPerson]="involvedPerson" (saved)="clearSelection()"></add-involved-form>
+          <involved-person-form [involvedPerson]="involvedPerson" (saved)="clearSelection()"></involved-person-form>
         </div>
         @if (utilityCostPaymentsSelected(); as utilityCostPayments) {
           <div style="flex: 1;">
-            <edit-involved-person [involvedPerson]="involvedPerson" [utilityCostPayments]="utilityCostPayments"></edit-involved-person>
+            <edit-involved-person [involvedPerson]="involvedPerson"
+                                  [utilityCostPayments]="utilityCostPayments"></edit-involved-person>
           </div>
         }
       </div>
