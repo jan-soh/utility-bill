@@ -1,6 +1,7 @@
-import {Component, computed, input} from '@angular/core';
+import {Component, inject, signal} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
+import {UtilityCostPaymentSubject} from '../../../../observers/utility-cost-payment/UtilityCostPaymentSubject';
 
 @Component({
   selector: 'utility-cost-payments-list',
@@ -9,9 +10,12 @@ import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 })
 export class UtilityCostPaymentsList {
 
+  public readonly utilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
 
-  public involvedPerson = input.required<InvolvedPerson>();
-  public paymentHistory = computed(() => this.involvedPerson().utilityCostPaymentHistory);
+  public involvedPerson = signal<InvolvedPerson | null>(null);
+  public paymentHistory = signal<UtilityCostPayment[] | null>([]);
+
+  visible = signal<boolean>(false);
 
   public add(): void {
   }

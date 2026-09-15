@@ -1,4 +1,4 @@
-import {inject, Injectable, signal, Signal} from '@angular/core';
+import {inject, Injectable, signal} from '@angular/core';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonService} from '../../service/InvolvedPersonService';
 import {catchError, of, tap} from 'rxjs';
@@ -9,15 +9,18 @@ import {InvolvedPersonCreatedObserver} from './InvolvedPersonCreatedObserver';
   providedIn: 'root'
 })
 export class InvolvedPersonSubject {
-  private involvedService = inject(InvolvedPersonService);
-  private involvedPersonsSignal = signal<InvolvedPerson[]>([]);
-  private selectedInvolvedPersonSignal = signal<InvolvedPerson | null>(null);
 
-  private involvedPersonAdded: InvolvedPerson | null = null;
+  private readonly involvedService = inject(InvolvedPersonService);
+
   private readonly involvedPersonAddedObservers: InvolvedPersonAddedObserver[] = [];
   private readonly involvedPersonCreatedObservers: InvolvedPersonCreatedObserver[] = [];
 
-  public readonly involvedPersons: Signal<InvolvedPerson[]> = this.involvedPersonsSignal.asReadonly();
+  private involvedPersonsSignal = signal<InvolvedPerson[]>([]);
+
+  private selectedInvolvedPersonSignal = signal<InvolvedPerson | null>(null);
+  private involvedPersonAdded: InvolvedPerson | null = null;
+
+  public readonly involvedPersons = this.involvedPersonsSignal.asReadonly();
 
   constructor() {
     this.involvedService.findAll().pipe(

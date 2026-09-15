@@ -19,8 +19,8 @@ public class UtilityCostPaymentServiceImpl implements UtilityCostPaymentService 
     private final UtilityCostPaymentMapper mapper;
 
     @Override
-    public List<UtilityCostPaymentDTO> list() {
-        return repository.findAll().stream().map(mapper::toDto).toList();
+    public List<UtilityCostPaymentDTO> list(UUID involvedPersonId) {
+        return repository.findByInvolvedPersonId(involvedPersonId).stream().map(mapper::toDto).toList();
     }
 
     @Override

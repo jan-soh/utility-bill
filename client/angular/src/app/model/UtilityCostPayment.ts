@@ -1,6 +1,7 @@
 export class UtilityCostPayment {
   id: string = '';
+  involvedPersonId: string = '';
   amount: number = 0;
-  validFrom: Date = new Date();
-  validTo: Date = new Date();
+  validFrom: string = '';
+  validTo: string = '';
 }

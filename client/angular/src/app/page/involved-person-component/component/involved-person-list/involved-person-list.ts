@@ -2,13 +2,11 @@ import {Component, inject, output} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
-import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'involved-person-list',
   templateUrl: './involved-person-list.html',
   styleUrl: './involved-person-list.css',
-  imports: [NgIf],
 })
 export class InvolvedPersonList {
 

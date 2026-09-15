@@ -22,16 +22,9 @@
       <div style="flex: 1;">
         <involved-person-form></involved-person-form>
       </div>
-
-      @if (involvedPersonSelected(); as involvedPerson) {
-
-        @if (utilityCostPaymentsSelected(); as utilityCostPayments) {
-          <div style="flex: 1;">
-            <utility-cost-payments-form [involvedPerson]="involvedPerson"
-                                        [utilityCostPayments]="utilityCostPayments"></utility-cost-payments-form>
-          </div>
-        }
-      }
+      <div style="flex: 1;">
+        <utility-cost-payments-form></utility-cost-payments-form>
+      </div>
     </div>
   </div>
 </div>

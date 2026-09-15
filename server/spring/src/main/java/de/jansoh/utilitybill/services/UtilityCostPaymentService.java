@@ -8,7 +8,7 @@ import java.util.UUID;
 
 public interface UtilityCostPaymentService {
 
-    List<UtilityCostPaymentDTO> list();
+    List<UtilityCostPaymentDTO> list(UUID involvedPersonId);
 
     Optional<UtilityCostPaymentDTO> getById(UUID id);
 
