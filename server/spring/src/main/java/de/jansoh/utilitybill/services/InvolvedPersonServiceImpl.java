@@ -6,6 +6,7 @@ import de.jansoh.utilitybill.model.InvolvedPersonDTO;
 import de.jansoh.utilitybill.repositories.InvolvedPersonRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class InvolvedPersonServiceImpl implements InvolvedPersonService {
 
     private final InvolvedPersonRepository repository;

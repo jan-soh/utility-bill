@@ -5,6 +5,7 @@ import de.jansoh.utilitybill.model.UtilityCostPaymentDTO;
 import de.jansoh.utilitybill.repositories.UtilityCostPaymentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -13,6 +14,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class UtilityCostPaymentServiceImpl implements UtilityCostPaymentService {
 
     private final UtilityCostPaymentRepository repository;

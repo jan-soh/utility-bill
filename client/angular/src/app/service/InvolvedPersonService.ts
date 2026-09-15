@@ -21,7 +21,6 @@ export class InvolvedPersonService {
   }
 
   public delete(involvedPerson: InvolvedPerson): Observable<void> {
-    
     return this.http.delete<void>(`${InvolvedPersonService.API_URL}/${involvedPerson.id}`);
   }
 }

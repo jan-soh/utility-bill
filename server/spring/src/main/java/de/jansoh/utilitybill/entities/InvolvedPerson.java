@@ -3,7 +3,9 @@ package de.jansoh.utilitybill.entities;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.annotations.UuidGenerator;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class InvolvedPerson {
     @Id
     @GeneratedValue(generator = "UUID")
     @UuidGenerator
+    @JdbcTypeCode(SqlTypes.CHAR)
     @Column(length = 36, updatable = false, nullable = false)
     private UUID id;
 

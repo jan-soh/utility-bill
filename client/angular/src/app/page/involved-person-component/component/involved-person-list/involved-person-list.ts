@@ -1,16 +1,16 @@
 import {Component, inject, output, signal} from '@angular/core';
 import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
 import {InvolvedPersonDeletedObserver} from '../../../../observers/involved-person/InvolvedPersonDeletedObserver';
 import {InvolvedPersonsLoadedObserver} from '../../../../observers/involved-person/InvolvedPersonsLoadedObserver';
+import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
 
 @Component({
   selector: 'involved-person-list',
   templateUrl: './involved-person-list.html',
   styleUrl: './involved-person-list.css',
 })
-export class InvolvedPersonList implements InvolvedPersonDeletedObserver, InvolvedPersonsLoadedObserver {
+export class InvolvedPersonList implements InvolvedPersonsLoadedObserver, InvolvedPersonCreatedObserver, InvolvedPersonDeletedObserver {
 
   private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 
@@ -20,6 +20,7 @@ export class InvolvedPersonList implements InvolvedPersonDeletedObserver, Involv
 
   constructor() {
     this.involvedSubject.registerInvolvedPersonDeletedObserver(this);
+    this.involvedSubject.registerInvolvedPersonCreatedObserver(this);
     this.involvedSubject.registerInvolvedPersonsLoadedObserver(this);
   }
 
@@ -36,6 +37,14 @@ export class InvolvedPersonList implements InvolvedPersonDeletedObserver, Involv
   }
 
   public involvedPersonsLoadedError(error: string): void {
+    console.error(error);
+  }
+
+  public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
+    this.involvedList.update(current => [...current, involvedPerson]);
+  }
+
+  public involvedPersonCreatedError(error: string): void {
     console.error(error);
   }
 
