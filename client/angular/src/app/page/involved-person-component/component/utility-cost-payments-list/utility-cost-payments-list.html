@@ -1,44 +1,45 @@
 @if (visible() && involvedPerson(); as involvedPerson) {
+  <div>
+    <h2>Utility cost payments of <b>{{ involvedPerson.name }}</b></h2>
 
-  <h2>Utility cost payments of {{ involvedPerson.name }}</h2>
+    <div style="height: 30px"></div>
 
-  <div style="height: 30px"></div>
+    <div class="overflow-x-auto shadow-md sm:rounded-lg">
+      <table class="w-full text-sm text-left text-gray-500">
+        <thead class="text-xs text-gray-700 uppercase bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3">
+            Monthly amount
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Valid from
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Valid to
+          </th>
+          <th scope="col" class="px-6 py-3">
+            Actions
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+          @for (payment of paymentHistory(); track payment.id) {
+            <tr class="bg-white border-b hover:bg-gray-50">
+              <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ payment.amount }}</td>
+              <td class="px-6 py-4">{{ payment.validFrom }}</td>
+              <td class="px-6 py-4">{{ payment.validTo }}</td>
+              <td class="px-6 py-4">
+                <button class="tab-button edit-button" (click)="edit(payment)">Edit</button>
+                <button class="tab-button delete-button" (click)="delete(payment)">Delete</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
 
-  <div class="overflow-x-auto shadow-md sm:rounded-lg">
-    <table class="w-full text-sm text-left text-gray-500">
-      <thead class="text-xs text-gray-700 uppercase bg-gray-50">
-      <tr>
-        <th scope="col" class="px-6 py-3">
-          Monthly amount
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Valid from
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Valid to
-        </th>
-        <th scope="col" class="px-6 py-3">
-          Actions
-        </th>
-      </tr>
-      </thead>
-      <tbody>
-        @for (payment of paymentHistory(); track payment.id) {
-          <tr class="bg-white border-b hover:bg-gray-50">
-            <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ payment.amount }}</td>
-            <td class="px-6 py-4">{{ payment.validFrom }}</td>
-            <td class="px-6 py-4">{{ payment.validTo }}</td>
-            <td class="px-6 py-4">
-              <button class="tab-button edit-button" (click)="edit(payment)">Edit</button>
-              <button class="tab-button delete-button" (click)="delete(payment)">Delete</button>
-            </td>
-          </tr>
-        }
-      </tbody>
-    </table>
-
-    <div class="button-group">
-      <button class="add-button" (click)="add()">Add</button>
+      <div class="button-group">
+        <button class="add-button" (click)="add()">Add</button>
+      </div>
     </div>
   </div>
 }

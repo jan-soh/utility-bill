@@ -19,4 +19,9 @@ export class InvolvedPersonService {
   public save(involvedPerson: InvolvedPerson): Observable<InvolvedPerson> {
     return this.http.post<InvolvedPerson>(InvolvedPersonService.API_URL, involvedPerson);
   }
+
+  public delete(involvedPerson: InvolvedPerson): Observable<void> {
+    
+    return this.http.delete<void>(`${InvolvedPersonService.API_URL}/${involvedPerson.id}`);
+  }
 }

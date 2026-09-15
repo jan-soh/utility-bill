@@ -1,13 +1,29 @@
-.edit-button {
-  background-color: #007bff;
+.tab-button {
+  margin-right: 5px;
+  width: 55px;
   color: white;
   border: none;
   padding: 3px;
   border-radius: 4px;
   cursor: pointer;
   font-size: 12px;
-  width: 40px;
   transition: background-color 0.2s;
+}
+
+.delete-button {
+  background-color: #eb7171;
+}
+
+.delete-button:hover {
+  background-color: #e8a4a4;
+}
+
+.delete-button:active {
+  background-color: #c77878;
+}
+
+.edit-button {
+  background-color: #007bff;
 }
 
 .edit-button:hover {

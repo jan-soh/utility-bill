@@ -42,6 +42,7 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
   }
 
   public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
+    this.involvedPerson.set(involvedPerson);
     this.visible.set(true);
   }
 
@@ -54,7 +55,7 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
   }
 
   public utilityCostPaymentCreated(utilityCostPayment: UtilityCostPayment): void {
-    this.visible.set(false);
+
   }
 
   public utilityCostPaymentCreatedError(errorMessage: string): void {
@@ -88,6 +89,10 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
     }
 
     return true;
+  }
+
+  public cancel(): void {
+    this.visible.set(false);
   }
 
   public reset(): void {

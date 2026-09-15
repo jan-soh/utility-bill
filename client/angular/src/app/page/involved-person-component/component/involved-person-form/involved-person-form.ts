@@ -17,7 +17,7 @@ export class InvolvedPersonForm implements InvolvedPersonAddedObserver, Involved
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 
   visible = signal<boolean>(false);
-  saving: boolean = false;
+  saving = signal<boolean>(false);
   involvedPerson = signal<InvolvedPerson | null>(null);
   errorMessage = signal<string | null>(null);
   actionMessage = signal<string | null>(null);
@@ -33,22 +33,25 @@ export class InvolvedPersonForm implements InvolvedPersonAddedObserver, Involved
   }
 
   public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
-    this.saving = false;
-    this.visible.set(false);
+    this.saving.set(false);
   }
 
   public involvedPersonCreatedError(error: string): void {
     this.errorMessage.set(error);
-    this.saving = false;
+    this.saving.set(false);
   }
 
   public save(): void {
 
     if (this.isValidForSave()) {
 
-      this.saving = true;
+      this.saving.set(true);
       this.involvedPersonSubject.createInvolvedPerson();
     }
+  }
+
+  public cancel(): void {
+    this.visible.set(false);
   }
 
   private isValidForSave(): boolean {

@@ -1,36 +1,33 @@
-@if (visible() && utilityCostPayment(); as utilityCostPayment) {
+@if (visible() && involvedPerson() && utilityCostPayment(); as payment) {
+  <div>
+    <h2>Add a new utility cost payments for <b>{{ involvedPerson()?.name }}</b></h2>
 
-  @if (involvedPerson(); as involvedPerson) {
-    <h2>Add a new utility cost payments for {{ involvedPerson.name }}</h2>
-  } @else {
-    <h2>Add a new utility cost payments</h2>
-  }
+    <div class="form-container">
+      <div class="form-group">
+        <label for="amount">Amount:</label>
+        <input id="amount" type="number" [(ngModel)]="payment.amount" [disabled]="saving"/>
+      </div>
 
-  <div class="form-container">
-    <div class="form-group">
-      <label for="amount">Amount:</label>
-      <input id="amount" type="number" [(ngModel)]="utilityCostPayment.amount" [disabled]="saving"/>
-    </div>
+      <div class="form-group">
+        <label for="valid-from">Valid from:</label>
+        <input id="valid-from" type="date" [(ngModel)]="payment.validFrom" [disabled]="saving"/>
+      </div>
 
-    <div class="form-group">
-      <label for="valid-from">Valid from:</label>
-      <input id="valid-from" type="date" [(ngModel)]="utilityCostPayment.validFrom" [disabled]="saving"/>
-    </div>
+      <div class="form-group">
+        <label for="valid-to">Valid to:</label>
+        <input id="valid-to" type="date" [(ngModel)]="payment.validTo" [disabled]="saving"/>
+      </div>
 
-    <div class="form-group">
-      <label for="valid-to">Valid to:</label>
-      <input id="valid-to" type="date" [(ngModel)]="utilityCostPayment.validTo" [disabled]="saving"/>
-    </div>
+      <div class="button-group">
+        <button class="save-button" (click)="save()">Save</button>
+      </div>
 
-    <div class="button-group">
-      <button class="save-button" (click)="save()">Save</button>
-    </div>
-
-    <div *ngIf="errorMessage()" class="error-message">
-      {{ errorMessage() }}
-    </div>
-    <div *ngIf="actionMessage()" class="action-message">
-      {{ actionMessage() }}
+      <div *ngIf="errorMessage()" class="error-message">
+        {{ errorMessage() }}
+      </div>
+      <div *ngIf="actionMessage()" class="action-message">
+        {{ actionMessage() }}
+      </div>
     </div>
   </div>
 }

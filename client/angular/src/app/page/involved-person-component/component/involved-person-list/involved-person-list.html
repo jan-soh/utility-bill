@@ -25,13 +25,14 @@
     </thead>
     <tbody>
       @for (involved of involvedList(); track involved.id) {
+        
         <tr class="bg-white border-b hover:bg-gray-50">
           <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ involved.name }}</td>
           <td class="px-6 py-4">{{ involved.startOfInvolvement }}</td>
           <td class="px-6 py-4">{{ involved.endOfInvolvement }}</td>
-          <td class="px-6 py-4">{{ getCurrentUtilityCostPayment(involved).amount }}</td>
           <td class="px-6 py-4">
-            <button class="edit-button" (click)="edit(involved)">Edit</button>
+            <button class="tab-button edit-button" (click)="edit(involved)">Edit</button>
+            <button class="tab-button delete-button" (click)="delete(involved)">Delete</button>
           </td>
         </tr>
       }

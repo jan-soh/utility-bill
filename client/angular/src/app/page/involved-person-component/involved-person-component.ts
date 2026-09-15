@@ -5,12 +5,13 @@ import {UtilityCostPayment} from '../../model/UtilityCostPayment';
 import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
 import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
 import {InvolvedPersonSubject} from '../../observers/involved-person/InvolvedPersonSubject';
+import {UtilityCostPaymentsList} from './component/utility-cost-payments-list/utility-cost-payments-list';
 
 @Component({
   selector: 'involved-person-component',
   templateUrl: './involved-person-component.html',
   styleUrl: './involved-person-component.css',
-  imports: [InvolvedPersonForm, InvolvedPersonList, UtilityCostPaymentsForm],
+  imports: [InvolvedPersonForm, InvolvedPersonList, UtilityCostPaymentsForm, UtilityCostPaymentsList],
 })
 export class InvolvedPersonComponent {
 
