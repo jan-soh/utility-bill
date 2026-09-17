@@ -20,8 +20,13 @@
       </div>
 
       <div class="button-group">
-        <button class="save-button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}
-        </button>
+        @if (involvedPerson.id) {
+          <button class="save-button" (click)="edit()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Edit' }}
+          </button>
+        } @else {
+          <button class="save-button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}
+          </button>
+        }
       </div>
 
       <div *ngIf="errorMessage()" class="error-message">

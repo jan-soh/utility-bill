@@ -25,14 +25,13 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
   private readonly utilityCostPaymentSubject: UtilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
 
   visible = signal<boolean>(false);
-  saving: boolean = false;
+  saving = signal<boolean>(false);
 
   involvedPerson = signal<InvolvedPerson | null>(null);
   utilityCostPayment = signal<UtilityCostPayment | null>(null);
 
   errorMessage = signal<string | null>(null);
   actionMessage = signal<string | null>(null);
-
 
   constructor() {
 
@@ -64,18 +63,19 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
 
   public save(): void {
 
-    if (this.isValidForSave()) {
+    const utilityCostPayment = this.utilityCostPayment();
 
-      this.saving = true;
+    if (this.isValidForCreate(utilityCostPayment)) {
+
+      this.saving.set(true);
       this.utilityCostPaymentSubject.createUtilityCostPayment();
     }
   }
 
-  private isValidForSave(): boolean {
-
-    const utilityCostPayment = this.utilityCostPayment();
+  private isValidForCreate(utilityCostPayment: UtilityCostPayment | null): utilityCostPayment is UtilityCostPayment {
 
     if (!utilityCostPayment) {
+      console.error('utilityCostPayment is null');
       return false;
     }
 
@@ -85,6 +85,33 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
     }
     if (!utilityCostPayment.validFrom) {
       this.actionMessage.set('Valid from is required');
+      return false;
+    }
+
+    return true;
+  }
+
+  public edit(): void {
+
+    const utilityCostPayment = this.utilityCostPayment();
+
+    if (this.isValidForUpdate(utilityCostPayment)) {
+
+      this.saving.set(true);
+      //this.utilityCostPaymentSubject.updateUtilityCostPayment(utilityCostPayment);
+    }
+  }
+
+  private isValidForUpdate(utilityCostPayment: UtilityCostPayment | null): utilityCostPayment is UtilityCostPayment {
+
+    const isValidForSave = this.isValidForCreate(utilityCostPayment);
+
+    if (!isValidForSave) {
+      return false;
+    }
+
+    if (!utilityCostPayment?.id) {
+      console.error('utilityCostPayment.id is null');
       return false;
     }
 

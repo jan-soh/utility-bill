@@ -5,21 +5,27 @@
     <div class="form-container">
       <div class="form-group">
         <label for="amount">Amount:</label>
-        <input id="amount" type="number" [(ngModel)]="payment.amount" [disabled]="saving"/>
+        <input id="amount" type="number" [(ngModel)]="payment.amount" [disabled]="saving()"/>
       </div>
 
       <div class="form-group">
         <label for="valid-from">Valid from:</label>
-        <input id="valid-from" type="date" [(ngModel)]="payment.validFrom" [disabled]="saving"/>
+        <input id="valid-from" type="date" [(ngModel)]="payment.validFrom" [disabled]="saving()"/>
       </div>
 
       <div class="form-group">
         <label for="valid-to">Valid to:</label>
-        <input id="valid-to" type="date" [(ngModel)]="payment.validTo" [disabled]="saving"/>
+        <input id="valid-to" type="date" [(ngModel)]="payment.validTo" [disabled]="saving()"/>
       </div>
 
       <div class="button-group">
-        <button class="save-button" (click)="save()">Save</button>
+        @if (payment.id) {
+          <button class="save-button" (click)="edit()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Edit' }}
+          </button>
+        } @else {
+          <button class="save-button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}
+          </button>
+        }
       </div>
 
       <div *ngIf="errorMessage()" class="error-message">

@@ -12,7 +12,7 @@ import {InvolvedPersonDeletedObserver} from './InvolvedPersonDeletedObserver';
 })
 export class InvolvedPersonSubject {
 
-  private readonly involvedService = inject(InvolvedPersonService);
+  private readonly involvedPersonService = inject(InvolvedPersonService);
 
   private readonly involvedPersonsLoadedObservers: InvolvedPersonsLoadedObserver[] = [];
   private readonly involvedPersonAddedObservers: InvolvedPersonAddedObserver[] = [];
@@ -25,7 +25,7 @@ export class InvolvedPersonSubject {
   private involvedPersonAdded: InvolvedPerson | null = null;
 
   constructor() {
-    this.involvedService.findAll().pipe(
+    this.involvedPersonService.findAll().pipe(
       catchError(err => {
         this.notifyInvolvedPersonsLoadedError("Failed to load involved persons.");
         return of([]);
@@ -85,22 +85,28 @@ export class InvolvedPersonSubject {
     this.notifyInvolvedPersonAdded(this.involvedPersonAdded);
   }
 
-  public createInvolvedPerson(): void {
-    if (!this.involvedPersonAdded) {
+  public createInvolvedPerson(involvedPerson: InvolvedPerson): void {
+    if (!involvedPerson) {
+      console.error("Can not create involved person, it's is null.");
       return;
     }
 
-    this.involvedService.save(this.involvedPersonAdded).pipe(
-      tap(savedInvolvedPerson => {
+    if (involvedPerson.id) {
+      console.error("Can not create involved person, an entity with the same id already exists. Use editInvolvedPerson(InvolvedPerson) instead.");
+      return;
+    }
+
+    this.involvedPersonService.save(involvedPerson).pipe(
+      tap(createdPerson => {
         this.involvedPersonsSignal.update(current => {
-          const index = current.findIndex(p => p.id === savedInvolvedPerson.id);
+          const index = current.findIndex(existingPerson => existingPerson.id === createdPerson.id);
           if (index > -1) {
-            return current.map((p, i) => i === index ? savedInvolvedPerson : p);
+            return current.map((p, i) => i === index ? createdPerson : p);
           } else {
-            return [...current, savedInvolvedPerson];
+            return [...current, createdPerson];
           }
         });
-        this.notifyInvolvedPersonCreated(savedInvolvedPerson);
+        this.notifyInvolvedPersonCreated(createdPerson);
       }),
       catchError((err) => {
         this.notifyInvolvedPersonCreatedError("Failed to create involved person.");
@@ -109,8 +115,33 @@ export class InvolvedPersonSubject {
     ).subscribe();
   }
 
+  public updateInvolvedPerson(involvedPerson: InvolvedPerson): void {
+
+    if (!involvedPerson) {
+      console.error("Can not create involved person, it's is null.");
+      return;
+    }
+
+    if (!involvedPerson.id) {
+      console.error("Can not update involved person, the entity does not exist yet. Use createInvolvedPerson(InvolvedPerson) instead.");
+      return;
+    }
+
+    this.involvedPersonService.update(involvedPerson).pipe(
+      tap(updatedPerson => {
+        this.involvedPersonsSignal.update(persons =>
+          persons.map(existingPerson => existingPerson.id === updatedPerson.id ? updatedPerson : existingPerson)
+        );
+      }),
+      catchError(() => {
+        this.notifyInvolvedPersonCreatedError("Failed to update involved person.");
+        return of(null);
+      })
+    ).subscribe();
+  }
+
   public deleteInvolvedPerson(involvedPerson: InvolvedPerson): void {
-    this.involvedService.delete(involvedPerson).pipe(
+    this.involvedPersonService.delete(involvedPerson).pipe(
       tap(() => {
         this.involvedPersonsSignal.update(current => current.filter(p => p.id !== involvedPerson.id));
         this.notifyInvolvedPersonDeleted(involvedPerson);

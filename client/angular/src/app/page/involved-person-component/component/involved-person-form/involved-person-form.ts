@@ -43,22 +43,19 @@ export class InvolvedPersonForm implements InvolvedPersonAddedObserver, Involved
 
   public save(): void {
 
-    if (this.isValidForSave()) {
+    const involvedPerson = this.involvedPerson();
+
+    if (this.isValidForCreate(involvedPerson)) {
 
       this.saving.set(true);
-      this.involvedPersonSubject.createInvolvedPerson();
+      this.involvedPersonSubject.createInvolvedPerson(involvedPerson);
     }
   }
 
-  public cancel(): void {
-    this.visible.set(false);
-  }
-
-  private isValidForSave(): boolean {
-
-    const involvedPerson = this.involvedPerson();
+  private isValidForCreate(involvedPerson: InvolvedPerson | null): involvedPerson is InvolvedPerson {
 
     if (!involvedPerson) {
+      console.error('involvedPerson is null');
       return false;
     }
 
@@ -72,6 +69,36 @@ export class InvolvedPersonForm implements InvolvedPersonAddedObserver, Involved
     }
 
     return true;
+  }
+
+  public edit(): void {
+    const involvedPerson = this.involvedPerson();
+
+    if (this.isValidForUpdate(involvedPerson)) {
+
+      this.saving.set(true);
+      this.involvedPersonSubject.updateInvolvedPerson(involvedPerson);
+    }
+  }
+
+  private isValidForUpdate(involvedPerson: InvolvedPerson | null): involvedPerson is InvolvedPerson {
+
+    const isValidForSave = this.isValidForCreate(involvedPerson);
+
+    if (!isValidForSave) {
+      return false;
+    }
+
+    if (!involvedPerson?.id) {
+      console.error('involvedPerson.id is null');
+      return false;
+    }
+
+    return true;
+  }
+
+  public cancel(): void {
+    this.visible.set(false);
   }
 
   public reset(): void {
