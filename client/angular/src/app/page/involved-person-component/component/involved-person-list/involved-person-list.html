@@ -3,6 +3,13 @@
 <div style="height: 30px"></div>
 
 <div class="overflow-x-auto shadow-md sm:rounded-lg">
+
+  @if (store.hasError()) {
+    <div class="error-message">
+      {{ store.error() }}
+    </div>
+  }
+
   <table class="w-full text-sm text-left text-gray-500">
     <thead class="text-xs text-gray-700 uppercase bg-gray-50">
     <tr>
@@ -21,15 +28,15 @@
     </tr>
     </thead>
     <tbody>
-      @for (involved of involvedList(); track involved.id) {
+      @for (person of store.persons(); track person.id) {
 
         <tr class="bg-white border-b hover:bg-gray-50">
-          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ involved.name }}</td>
-          <td class="px-6 py-4">{{ involved.startOfInvolvement }}</td>
-          <td class="px-6 py-4">{{ involved.endOfInvolvement }}</td>
+          <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ person.name }}</td>
+          <td class="px-6 py-4">{{ person.startOfInvolvement }}</td>
+          <td class="px-6 py-4">{{ person.endOfInvolvement }}</td>
           <td class="px-6 py-4">
-            <button class="tab-button edit-button" (click)="edit(involved)">Edit</button>
-            <button class="tab-button delete-button" (click)="delete(involved)">Delete</button>
+            <button class="tab-button edit-button" (click)="edit(person)">Edit</button>
+            <button class="tab-button delete-button" (click)="delete(person)">Delete</button>
           </td>
         </tr>
       }
