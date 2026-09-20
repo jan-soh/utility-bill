@@ -7,13 +7,19 @@ import {
   UtilityCostPaymentCreatedObserver
 } from '../../../../observers/utility-cost-payment/UtilityCostPaymentCreatedObserver';
 import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
+import {
+  InvolvedPersonRequestedForEditingObserver
+} from '../../../../observers/involved-person/InvolvedPersonRequestedForEditingObserver';
+import {
+  UtilityCostPaymentHistoryChangedObserver
+} from '../../../../observers/utility-cost-payment/UtilityCostPaymentHistoryChangedObserver';
 
 @Component({
   selector: 'utility-cost-payments-list',
   styleUrls: ['./utility-cost-payments-list.css'],
   templateUrl: './utility-cost-payments-list.html',
 })
-export class UtilityCostPaymentsList implements UtilityCostPaymentCreatedObserver, InvolvedPersonCreatedObserver {
+export class UtilityCostPaymentsList implements UtilityCostPaymentCreatedObserver, InvolvedPersonCreatedObserver, UtilityCostPaymentHistoryChangedObserver, InvolvedPersonRequestedForEditingObserver {
 
   public readonly utilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
   public readonly involvedPersonSubject = inject(InvolvedPersonSubject);
@@ -25,7 +31,9 @@ export class UtilityCostPaymentsList implements UtilityCostPaymentCreatedObserve
 
   constructor() {
     this.utilityCostPaymentSubject.registerUtilityCostPaymentCreatedObserver(this);
+    this.utilityCostPaymentSubject.registerUtilityCostPaymentHistoryChangedObserver(this);
     this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonRequestedForEditingObserver(this);
   }
 
   public add(): void {
@@ -55,5 +63,18 @@ export class UtilityCostPaymentsList implements UtilityCostPaymentCreatedObserve
 
   public involvedPersonCreatedError(error: string): void {
     // nothing to do yet
+  }
+
+  public utilityCostPaymentHistoryChanged(utilityCostPaymentHistory: UtilityCostPayment[]): void {
+    this.paymentHistory.set(utilityCostPaymentHistory);
+  }
+
+  public involvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
+    this.involvedPerson.set(involvedPerson);
+    this.visible.set(true);
+  }
+
+  public involvedPersonRequestedForEditingError(errorMessage: string): void {
+
   }
 }

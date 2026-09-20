@@ -14,16 +14,17 @@ import java.util.UUID;
 public class UtilityCostPaymentController {
 
     public static final String PATH = "/api/v1/utility-cost-payment";
-    public static final String PATH_ID = PATH + "/{id}";
+    public static final String PATH_BY_ID = PATH + "/{id}";
+    public static final String PATH_HISTORY_BY_INVOLVED_PERSON_ID = PATH + "/history/{involvedPersonId}";
 
     private final UtilityCostPaymentService service;
 
-    @GetMapping(PATH)
-    public List<UtilityCostPaymentDTO> list(UUID involvedPersonId) {
+    @GetMapping(PATH_HISTORY_BY_INVOLVED_PERSON_ID)
+    public List<UtilityCostPaymentDTO> getHistoryByInvolvedPerson(@PathVariable UUID involvedPersonId) {
         return service.list(involvedPersonId);
     }
 
-    @GetMapping(PATH_ID)
+    @GetMapping(PATH_BY_ID)
     public UtilityCostPaymentDTO getById(@PathVariable UUID id) {
         return service.getById(id).orElseThrow(NotFoundException::new);
     }
@@ -33,12 +34,12 @@ public class UtilityCostPaymentController {
         return service.save(involvedPersonDTO);
     }
 
-    @PutMapping(PATH_ID)
+    @PutMapping(PATH_BY_ID)
     public UtilityCostPaymentDTO update(@PathVariable UUID id, @RequestBody UtilityCostPaymentDTO involvedPersonDTO) {
         return service.update(id, involvedPersonDTO).orElseThrow(NotFoundException::new);
     }
 
-    @DeleteMapping(PATH_ID)
+    @DeleteMapping(PATH_BY_ID)
     public ResponseEntity<Void> delete(@PathVariable UUID id) {
 
         if (!service.delete(id)) {

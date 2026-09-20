@@ -12,6 +12,9 @@ import {
   UtilityCostPaymentAddedObserver
 } from '../../../../observers/utility-cost-payment/UtilityCostPaymentAddedObserver';
 import {UtilityCostPaymentSubject} from '../../../../observers/utility-cost-payment/UtilityCostPaymentSubject';
+import {
+  UtilityCostPaymentRequestedForEditingObserver
+} from '../../../../observers/utility-cost-payment/UtilityCostPaymentRequestedForEditingObserver';
 
 @Component({
   selector: 'utility-cost-payments-form',
@@ -19,7 +22,7 @@ import {UtilityCostPaymentSubject} from '../../../../observers/utility-cost-paym
   templateUrl: './utility-cost-payments-form.html',
   imports: [NgIf, FormsModule],
 })
-export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, UtilityCostPaymentAddedObserver, UtilityCostPaymentCreatedObserver {
+export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, UtilityCostPaymentRequestedForEditingObserver, UtilityCostPaymentAddedObserver, UtilityCostPaymentCreatedObserver {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
   private readonly utilityCostPaymentSubject: UtilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
@@ -38,6 +41,7 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
     this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
     this.utilityCostPaymentSubject.registerUtilityCostPaymentAddedObserver(this);
     this.utilityCostPaymentSubject.registerUtilityCostPaymentCreatedObserver(this);
+    this.utilityCostPaymentSubject.registerUtilityCostPaymentRequestedForEditingObserver(this);
   }
 
   public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
@@ -57,8 +61,14 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
 
   }
 
+
   public utilityCostPaymentCreatedError(errorMessage: string): void {
     this.errorMessage.set(errorMessage);
+  }
+
+  public utilityCostPaymentRequestedForEditing(utilityCostPayment: UtilityCostPayment): void {
+    this.utilityCostPayment.set(utilityCostPayment);
+    this.visible.set(true);
   }
 
   public save(): void {
@@ -79,6 +89,10 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
       return false;
     }
 
+    if (!utilityCostPayment.involvedPersonId) {
+      this.actionMessage.set('Link to involved person is missing');
+      return false;
+    }
     if (!utilityCostPayment.amount) {
       this.actionMessage.set('Amount is required');
       return false;

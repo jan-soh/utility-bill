@@ -1,5 +1,6 @@
 package de.jansoh.utilitybill.services;
 
+import de.jansoh.utilitybill.entities.UtilityCostPayment;
 import de.jansoh.utilitybill.mappers.UtilityCostPaymentMapper;
 import de.jansoh.utilitybill.model.UtilityCostPaymentDTO;
 import de.jansoh.utilitybill.repositories.UtilityCostPaymentRepository;
@@ -22,7 +23,8 @@ public class UtilityCostPaymentServiceImpl implements UtilityCostPaymentService 
 
     @Override
     public List<UtilityCostPaymentDTO> list(UUID involvedPersonId) {
-        return repository.findByInvolvedPersonId(involvedPersonId).stream().map(mapper::toDto).toList();
+        List<UtilityCostPayment> payments = repository.findByInvolvedPersonId(involvedPersonId);
+        return payments.stream().map(mapper::toDto).toList();
     }
 
     @Override

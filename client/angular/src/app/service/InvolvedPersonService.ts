@@ -21,6 +21,15 @@ export class InvolvedPersonService {
     );
   }
 
+  public findById(id: string): Observable<InvolvedPerson> {
+    return this.http.get<InvolvedPerson>(`${InvolvedPersonService.API_URL}/${id}`).pipe(
+      catchError(err => {
+        console.error(`Failed to load involved person with id ${id}.`, err);
+        return throwError(() => err.error);
+      })
+    );
+  }
+
   public save(involvedPerson: InvolvedPerson): Observable<InvolvedPerson> {
     return this.http.post<InvolvedPerson>(InvolvedPersonService.API_URL, involvedPerson).pipe(
       catchError(err => {

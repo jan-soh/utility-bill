@@ -3,8 +3,13 @@ import {InvolvedPerson} from '../../../../model/InvolvedPerson';
 import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {InvolvedPersonAddedObserver} from '../../../../observers/involved-person/InvolvedPersonAddedObserver';
+import {
+  InvolvedPersonRequestedForAddingObserver
+} from '../../../../observers/involved-person/InvolvedPersonRequestedForAddingObserver';
 import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
+import {
+  InvolvedPersonRequestedForEditingObserver
+} from '../../../../observers/involved-person/InvolvedPersonRequestedForEditingObserver';
 
 @Component({
   selector: 'involved-person-form',
@@ -12,7 +17,7 @@ import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-pers
   styleUrl: './involved-person-form.css',
   imports: [FormsModule, CommonModule],
 })
-export class InvolvedPersonForm implements InvolvedPersonAddedObserver, InvolvedPersonCreatedObserver {
+export class InvolvedPersonForm implements InvolvedPersonRequestedForAddingObserver, InvolvedPersonCreatedObserver, InvolvedPersonRequestedForEditingObserver {
 
   private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 
@@ -23,13 +28,23 @@ export class InvolvedPersonForm implements InvolvedPersonAddedObserver, Involved
   actionMessage = signal<string | null>(null);
 
   constructor() {
-    this.involvedPersonSubject.registerInvolvedPersonAddedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonRequestedForAddingObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonRequestedForEditingObserver(this);
     this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
   }
 
-  public involvedPersonAdded(involvedPerson: InvolvedPerson) {
+  public involvedPersonRequestedForAdding(involvedPerson: InvolvedPerson) {
     this.involvedPerson.set(involvedPerson);
     this.visible.set(true);
+  }
+
+  public involvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
+    this.involvedPerson.set(involvedPerson);
+    this.visible.set(true);
+  }
+
+  public involvedPersonRequestedForEditingError(errorMessage: string): void {
+    // show error message mb
   }
 
   public involvedPersonCreated(involvedPerson: InvolvedPerson): void {

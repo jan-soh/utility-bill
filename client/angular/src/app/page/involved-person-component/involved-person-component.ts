@@ -24,6 +24,6 @@ export class InvolvedPersonComponent {
   }
 
   public add(): void {
-    this.involvedPersonSubject.addInvolvedPerson();
+    this.involvedPersonSubject.requestAddInvolvedPerson();
   }
 }

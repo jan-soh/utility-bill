@@ -9,11 +9,12 @@ import {UtilityCostPayment} from '../model/UtilityCostPayment';
 export class UtilityCostPaymentService {
 
   static readonly API_URL = 'http://localhost:8080/api/v1/utility-cost-payment';
+  static readonly API_URL_HISTORY = `${UtilityCostPaymentService.API_URL}/history`;
 
   private http: HttpClient = inject(HttpClient);
 
-  public findAll(involvedPersonId: string): Observable<UtilityCostPayment[]> {
-    return this.http.get<UtilityCostPayment[]>(UtilityCostPaymentService.API_URL);
+  public getHistoryByInvolvedPerson(involvedPersonId: string): Observable<UtilityCostPayment[]> {
+    return this.http.get<UtilityCostPayment[]>(`${UtilityCostPaymentService.API_URL_HISTORY}/${involvedPersonId}`);
   }
 
   public save(payment: UtilityCostPayment): Observable<UtilityCostPayment> {

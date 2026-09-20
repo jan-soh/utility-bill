@@ -8,11 +8,13 @@ import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonCreatedObserver} from '../involved-person/InvolvedPersonCreatedObserver';
 import {UtilityCostPaymentAddedObserver} from './UtilityCostPaymentAddedObserver';
 import {UtilityCostPaymentHistoryChangedObserver} from './UtilityCostPaymentHistoryChangedObserver';
+import {InvolvedPersonRequestedForEditingObserver} from '../involved-person/InvolvedPersonRequestedForEditingObserver';
+import {UtilityCostPaymentRequestedForEditingObserver} from './UtilityCostPaymentRequestedForEditingObserver';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver {
+export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver, InvolvedPersonRequestedForEditingObserver {
 
   private readonly involvedPersonSubject = inject(InvolvedPersonSubject);
   private readonly utilityCostPaymentService = inject(UtilityCostPaymentService);
@@ -21,15 +23,21 @@ export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver 
   private utilityCostPaymentHistory: UtilityCostPayment[] = [];
 
   private readonly utilityCostPaymentAddedObservers: UtilityCostPaymentAddedObserver[] = [];
+  private readonly utilityCostPaymentRequestedForEditingObservers: UtilityCostPaymentRequestedForEditingObserver[] = [];
   private readonly utilityCostPaymentCreatedObservers: UtilityCostPaymentCreatedObserver[] = [];
   private readonly utilityCostPaymentHistoryChangedObservers: UtilityCostPaymentHistoryChangedObserver[] = [];
 
   constructor() {
     this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonRequestedForEditingObserver(this);
   }
 
   public registerUtilityCostPaymentAddedObserver(observer: UtilityCostPaymentAddedObserver): void {
     this.utilityCostPaymentAddedObservers.push(observer);
+  }
+
+  public registerUtilityCostPaymentRequestedForEditingObserver(observer: UtilityCostPaymentRequestedForEditingObserver): void {
+    this.utilityCostPaymentRequestedForEditingObservers.push(observer);
   }
 
   public notifyUtilityCostPaymentAdded(utilityCostPayment: UtilityCostPayment): void {
@@ -52,24 +60,21 @@ export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver 
     this.utilityCostPaymentCreatedObservers.forEach(observer => observer.utilityCostPaymentCreatedError(errorMessage));
   }
 
+  private notifyUtilityCostPaymentRequestedForEditing(utilityCostPayment: UtilityCostPayment): void {
+    this.utilityCostPaymentRequestedForEditingObservers.forEach(observer => observer.utilityCostPaymentRequestedForEditing(utilityCostPayment));
+  }
+
   public notifyUtilityCostPaymentHistoryChanged(utilityCostPaymentHistory: UtilityCostPayment[]): void {
     this.utilityCostPaymentHistoryChangedObservers.forEach(observer => observer.utilityCostPaymentHistoryChanged(utilityCostPaymentHistory));
   }
 
-  public addUtilityCostPayment(involvedPerson: InvolvedPerson): void {
-
-    this.utilityCostPaymentAdded = new UtilityCostPayment();
-    this.utilityCostPaymentAdded.involvedPersonId = involvedPerson.id;
-    this.utilityCostPaymentAdded.validFrom = involvedPerson.startOfInvolvement;
-
-    this.utilityCostPaymentService.findAll(involvedPerson.id).subscribe(
+  public setUtilityCostPaymentHistory(involvedPerson: InvolvedPerson): void {
+    this.utilityCostPaymentService.getHistoryByInvolvedPerson(involvedPerson.id).subscribe(
       utilityCostPayments => {
         this.utilityCostPaymentHistory = utilityCostPayments;
         this.notifyUtilityCostPaymentHistoryChanged(utilityCostPayments);
       }
     )
-
-    this.notifyUtilityCostPaymentAdded(this.utilityCostPaymentAdded);
   }
 
   public createUtilityCostPayment(): void {
@@ -84,6 +89,7 @@ export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver 
         this.notifyUtilityCostPaymentCreated(savedUtilityCostPayment);
         this.notifyUtilityCostPaymentHistoryChanged(this.utilityCostPaymentHistory);
         this.utilityCostPaymentAdded = savedUtilityCostPayment;
+        return savedUtilityCostPayment;
       }),
       catchError((err) => {
         this.notifyUtilityCostPaymentCreatedError("Failed to create utility cost payment.");
@@ -99,6 +105,27 @@ export class UtilityCostPaymentSubject implements InvolvedPersonCreatedObserver 
     this.utilityCostPaymentAdded.validFrom = involvedPerson.startOfInvolvement;
 
     this.notifyUtilityCostPaymentAdded(this.utilityCostPaymentAdded);
+  }
+
+  public involvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
+
+    this.setUtilityCostPaymentHistory(involvedPerson);
+
+    const paymentHistory = this.utilityCostPaymentService.getHistoryByInvolvedPerson(involvedPerson.id).pipe(
+      tap(paymentHistoryLoaded => {
+        this.utilityCostPaymentHistory = paymentHistoryLoaded;
+        this.notifyUtilityCostPaymentHistoryChanged(paymentHistoryLoaded);
+        return paymentHistoryLoaded;
+      }),
+      catchError((err) => {
+        this.notifyUtilityCostPaymentCreatedError("Failed to get utility cost payment history.");
+        return of([]);
+      })
+    ).subscribe();
+  }
+
+  public involvedPersonRequestedForEditingError(errorMessage: string): void {
+    // show error message mb
   }
 
   public involvedPersonCreatedError(error: string): void {

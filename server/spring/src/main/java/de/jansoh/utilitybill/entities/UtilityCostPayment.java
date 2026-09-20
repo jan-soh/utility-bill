@@ -24,7 +24,12 @@ public class UtilityCostPayment {
     private UUID id;
 
     @ManyToOne
+    @JoinColumn(name = "involved_person_id", insertable = false, updatable = false)
     private InvolvedPerson involvedPerson;
+
+    @JdbcTypeCode(SqlTypes.CHAR)
+    @Column(name = "involved_person_id")
+    private UUID involvedPersonId;
 
     @Column(nullable = false)
     private BigDecimal amount;

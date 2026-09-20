@@ -2,7 +2,8 @@ import {inject, Injectable, signal} from '@angular/core';
 import {InvolvedPerson} from '../../model/InvolvedPerson';
 import {InvolvedPersonService} from '../../service/InvolvedPersonService';
 import {catchError, of, tap} from 'rxjs';
-import {InvolvedPersonAddedObserver} from './InvolvedPersonAddedObserver';
+import {InvolvedPersonRequestedForAddingObserver} from './InvolvedPersonRequestedForAddingObserver';
+import {InvolvedPersonRequestedForEditingObserver} from './InvolvedPersonRequestedForEditingObserver';
 import {InvolvedPersonCreatedObserver} from './InvolvedPersonCreatedObserver';
 import {InvolvedPersonsLoadedObserver} from './InvolvedPersonsLoadedObserver';
 import {InvolvedPersonDeletedObserver} from './InvolvedPersonDeletedObserver';
@@ -15,7 +16,8 @@ export class InvolvedPersonSubject {
   private readonly involvedPersonService = inject(InvolvedPersonService);
 
   private readonly involvedPersonsLoadedObservers: InvolvedPersonsLoadedObserver[] = [];
-  private readonly involvedPersonAddedObservers: InvolvedPersonAddedObserver[] = [];
+  private readonly involvedPersonRequestedForAddingObservers: InvolvedPersonRequestedForAddingObserver[] = [];
+  private readonly involvedPersonRequestedForEditingObservers: InvolvedPersonRequestedForEditingObserver[] = [];
   private readonly involvedPersonCreatedObservers: InvolvedPersonCreatedObserver[] = [];
   private readonly involvedPersonDeletedObservers: InvolvedPersonDeletedObserver[] = [];
 
@@ -39,8 +41,12 @@ export class InvolvedPersonSubject {
     this.involvedPersonsLoadedObservers.push(observer);
   }
 
-  public registerInvolvedPersonAddedObserver(observer: InvolvedPersonAddedObserver): void {
-    this.involvedPersonAddedObservers.push(observer);
+  public registerInvolvedPersonRequestedForAddingObserver(observer: InvolvedPersonRequestedForAddingObserver): void {
+    this.involvedPersonRequestedForAddingObservers.push(observer);
+  }
+
+  public registerInvolvedPersonRequestedForEditingObserver(observer: InvolvedPersonRequestedForEditingObserver): void {
+    this.involvedPersonRequestedForEditingObservers.push(observer);
   }
 
   public registerInvolvedPersonCreatedObserver(observer: InvolvedPersonCreatedObserver): void {
@@ -51,38 +57,60 @@ export class InvolvedPersonSubject {
     this.involvedPersonDeletedObservers.push(observer);
   }
 
-  public notifyInvolvedPersonsLoaded(involvedPersons: InvolvedPerson[]): void {
+  private notifyInvolvedPersonsLoaded(involvedPersons: InvolvedPerson[]): void {
     this.involvedPersonsLoadedObservers.forEach(observer => observer.involvedPersonsLoaded(involvedPersons));
   }
 
-  public notifyInvolvedPersonsLoadedError(errorMessage: string): void {
+  private notifyInvolvedPersonRequestedForAdding(involvedPerson: InvolvedPerson): void {
+    this.involvedPersonRequestedForAddingObservers.forEach(observer => observer.involvedPersonRequestedForAdding(involvedPerson));
+  }
+
+  private notifyInvolvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
+    this.involvedPersonRequestedForEditingObservers.forEach(observer => observer.involvedPersonRequestedForEditing(involvedPerson));
+  }
+
+  private notifyInvolvedPersonRequestedForEditingError(errorMessage: string): void {
+    this.involvedPersonRequestedForEditingObservers.forEach(observer => observer.involvedPersonRequestedForEditingError(errorMessage));
+  }
+
+
+  private notifyInvolvedPersonsLoadedError(errorMessage: string): void {
     this.involvedPersonsLoadedObservers.forEach(observer => observer.involvedPersonsLoadedError(errorMessage));
   }
 
-  public notifyInvolvedPersonCreated(involvedPerson: InvolvedPerson): void {
+  private notifyInvolvedPersonCreated(involvedPerson: InvolvedPerson): void {
     this.involvedPersonCreatedObservers.forEach(observer => observer.involvedPersonCreated(involvedPerson));
   }
 
-  public notifyInvolvedPersonCreatedError(errorMessage: string): void {
+  private notifyInvolvedPersonCreatedError(errorMessage: string): void {
     this.involvedPersonCreatedObservers.forEach(observer => observer.involvedPersonCreatedError(errorMessage));
   }
 
-  public notifyInvolvedPersonDeleted(involvedPerson: InvolvedPerson): void {
+  private notifyInvolvedPersonDeleted(involvedPerson: InvolvedPerson): void {
     this.involvedPersonDeletedObservers.forEach(observer => observer.involvedPersonDeleted(involvedPerson));
   }
 
-  public notifyInvolvedPersonDeletedError(errorMessage: string): void {
+  private notifyInvolvedPersonDeletedError(errorMessage: string): void {
     this.involvedPersonDeletedObservers.forEach(observer => observer.involvedPersonDeletedError(errorMessage));
   }
 
-  public notifyInvolvedPersonAdded(involvedPerson: InvolvedPerson): void {
-    this.involvedPersonAddedObservers.forEach(observer => observer.involvedPersonAdded(involvedPerson));
+  public requestAddInvolvedPerson(): void {
+    this.involvedPersonAdded = new InvolvedPerson();
+    this.notifyInvolvedPersonRequestedForAdding(this.involvedPersonAdded);
   }
 
+  public requestEditInvolvedPerson(involvedPersonid: string): void {
 
-  public addInvolvedPerson(): void {
-    this.involvedPersonAdded = new InvolvedPerson();
-    this.notifyInvolvedPersonAdded(this.involvedPersonAdded);
+    this.involvedPersonService.findById(involvedPersonid).pipe(
+      tap(involvedPersonLoaded => {
+        this.notifyInvolvedPersonRequestedForEditing(involvedPersonLoaded);
+        return of(involvedPersonLoaded);
+      }),
+      catchError(err => {
+        this.notifyInvolvedPersonRequestedForEditingError("Failed to load involved person for editing.");
+        return of(null);
+      })
+    ).subscribe();
   }
 
   public createInvolvedPerson(involvedPerson: InvolvedPerson): void {

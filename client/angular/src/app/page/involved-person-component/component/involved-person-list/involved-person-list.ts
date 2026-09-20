@@ -12,24 +12,24 @@ import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-pers
 })
 export class InvolvedPersonList implements InvolvedPersonsLoadedObserver, InvolvedPersonCreatedObserver, InvolvedPersonDeletedObserver {
 
-  private involvedSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
+  private involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
 
   public involvedList = signal<InvolvedPerson[]>([]);
   public involvedPersonSelected = output<InvolvedPerson>();
 
 
   constructor() {
-    this.involvedSubject.registerInvolvedPersonDeletedObserver(this);
-    this.involvedSubject.registerInvolvedPersonCreatedObserver(this);
-    this.involvedSubject.registerInvolvedPersonsLoadedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonDeletedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
+    this.involvedPersonSubject.registerInvolvedPersonsLoadedObserver(this);
   }
 
   public edit(involvedPerson: InvolvedPerson) {
-    this.involvedPersonSelected.emit(involvedPerson);
+    this.involvedPersonSubject.requestEditInvolvedPerson(involvedPerson.id);
   }
 
   public delete(involvedPerson: InvolvedPerson) {
-    this.involvedSubject.deleteInvolvedPerson(involvedPerson);
+    this.involvedPersonSubject.deleteInvolvedPerson(involvedPerson);
   }
 
   public involvedPersonsLoaded(involvedPersons: InvolvedPerson[]): void {
