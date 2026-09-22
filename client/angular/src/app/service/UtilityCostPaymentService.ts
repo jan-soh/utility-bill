@@ -1,6 +1,6 @@
 import {inject, Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import {UtilityCostPayment} from '../model/UtilityCostPayment';
 
 @Injectable({
@@ -19,5 +19,23 @@ export class UtilityCostPaymentService {
 
   public save(payment: UtilityCostPayment): Observable<UtilityCostPayment> {
     return this.http.post<UtilityCostPayment>(UtilityCostPaymentService.API_URL, payment);
+  }
+
+  public update(payment: UtilityCostPayment): Observable<UtilityCostPayment> {
+    return this.http.put<UtilityCostPayment>(`${UtilityCostPaymentService.API_URL}/${payment.id}`, payment).pipe(
+      catchError(err => {
+        console.error("Failed to update utility cost payment.", err);
+        return throwError(() => err.error);
+      })
+    );
+  }
+
+  public delete(payment: UtilityCostPayment): Observable<void> {
+    return this.http.delete<void>(`${UtilityCostPaymentService.API_URL}/${payment.id}`).pipe(
+      catchError(err => {
+        console.error("Failed to delete utility cost payment.", err);
+        return throwError(() => err.error);
+      })
+    );
   }
 }

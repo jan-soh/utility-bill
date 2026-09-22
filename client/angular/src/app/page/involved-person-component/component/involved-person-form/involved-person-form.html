@@ -1,40 +1,41 @@
-@if (visible() && involvedPerson(); as involvedPerson) {
+@if (visible() && store.selectedPerson(); as involvedPerson) {
   <div>
     <h2>Add a new involved person</h2>
     <div class="form-container">
       <div class="form-group">
         <label for="name">Name:</label>
-        <input id="name" type="text" [(ngModel)]="involvedPerson.name" [disabled]="saving()"/>
+        <input id="name" type="text" [(ngModel)]="involvedPerson.name" [disabled]="store.isLoading()"/>
       </div>
 
       <div class="form-group">
         <label for="start-of-involvement">Start of involvement:</label>
         <input id="start-of-involvement" type="date" [(ngModel)]="involvedPerson.startOfInvolvement"
-               [disabled]="saving()"/>
+               [disabled]="store.isLoading()"/>
       </div>
 
       <div class="form-group">
         <label for="end-of-involvement">End of involvement:</label>
         <input id="end-of-involvement" type="date" [(ngModel)]="involvedPerson.endOfInvolvement"
-               [disabled]="saving()"/>
+               [disabled]="store.isLoading()"/>
       </div>
 
       <div class="button-group">
         @if (involvedPerson.id) {
-          <button class="save-button" (click)="edit()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Edit' }}
+          <button class="save-button" (click)="update()"
+                  [disabled]="store.isLoading()">{{ store.isLoading() ? 'Loading...' : 'Update' }}
           </button>
         } @else {
-          <button class="save-button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}
+          <button class="save-button" (click)="create()"
+                  [disabled]="store.isLoading()">{{ store.isLoading() ? 'Loading...' : 'Create' }}
           </button>
         }
       </div>
 
-      <div *ngIf="errorMessage()" class="error-message">
-        {{ errorMessage() }}
-      </div>
-      <div *ngIf="actionMessage()" class="action-message">
-        {{ actionMessage() }}
-      </div>
+      @if (errorSignal()) {
+        <div class="error-message">
+          {{ errorSignal() }}
+        </div>
+      }
     </div>
   </div>
 }

@@ -1,6 +1,6 @@
-@if (visible() && involvedPerson(); as involvedPerson) {
+@if (visible()) {
   <div>
-    <h2>Utility cost payments of <b>{{ involvedPerson.name }}</b></h2>
+    <h2>Utility cost payments of <b>{{ involvedPersonStore.selectedPerson()?.name }}</b></h2>
 
     <div style="height: 30px"></div>
 
@@ -23,7 +23,7 @@
         </tr>
         </thead>
         <tbody>
-          @for (payment of paymentHistory(); track payment.id) {
+          @for (payment of utilityCostPaymentStore.paymentHistory(); track payment.id) {
             <tr class="bg-white border-b hover:bg-gray-50">
               <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">{{ payment.amount }}</td>
               <td class="px-6 py-4">{{ payment.validFrom }}</td>

@@ -11,7 +11,6 @@ export class InvolvedPersonList {
 
   protected readonly store = inject(InvolvedPersonStore);
 
-
   ngOnInit() {
     this.store.load();
   }

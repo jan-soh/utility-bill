@@ -1,15 +1,8 @@
-import {Component, inject, signal} from '@angular/core';
+import {Component, computed, inject, signal} from '@angular/core';
 import {InvolvedPerson} from '../../../../model/InvolvedPerson';
-import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
 import {FormsModule} from '@angular/forms';
 import {CommonModule} from '@angular/common';
-import {
-  InvolvedPersonRequestedForAddingObserver
-} from '../../../../observers/involved-person/InvolvedPersonRequestedForAddingObserver';
-import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
-import {
-  InvolvedPersonRequestedForEditingObserver
-} from '../../../../observers/involved-person/InvolvedPersonRequestedForEditingObserver';
+import {InvolvedPersonStore} from '../../../../store/InvolvedPersonStore';
 
 @Component({
   selector: 'involved-person-form',
@@ -17,82 +10,59 @@ import {
   styleUrl: './involved-person-form.css',
   imports: [FormsModule, CommonModule],
 })
-export class InvolvedPersonForm implements InvolvedPersonRequestedForAddingObserver, InvolvedPersonCreatedObserver, InvolvedPersonRequestedForEditingObserver {
+export class InvolvedPersonForm {
 
-  private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
+  readonly store = inject(InvolvedPersonStore);
+  readonly visible = computed(() => this.store.hasSelectedPerson());
 
-  visible = signal<boolean>(false);
-  saving = signal<boolean>(false);
-  involvedPerson = signal<InvolvedPerson | null>(null);
-  errorMessage = signal<string | null>(null);
-  actionMessage = signal<string | null>(null);
+  private readonly _localError = signal<string | null>(null);
 
-  constructor() {
-    this.involvedPersonSubject.registerInvolvedPersonRequestedForAddingObserver(this);
-    this.involvedPersonSubject.registerInvolvedPersonRequestedForEditingObserver(this);
-    this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
-  }
+  readonly errorSignal = computed(() => {
+    if (this._localError()) {
+      return this._localError();
+    } else if (this.store.error()) {
+      return this.store.error();
+    }
+    return null;
+  });
 
-  public involvedPersonRequestedForAdding(involvedPerson: InvolvedPerson) {
-    this.involvedPerson.set(involvedPerson);
-    this.visible.set(true);
-  }
+  public create(): void {
 
-  public involvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
-    this.involvedPerson.set(involvedPerson);
-    this.visible.set(true);
-  }
-
-  public involvedPersonRequestedForEditingError(errorMessage: string): void {
-    // show error message mb
-  }
-
-  public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
-    this.saving.set(false);
-  }
-
-  public involvedPersonCreatedError(error: string): void {
-    this.errorMessage.set(error);
-    this.saving.set(false);
-  }
-
-  public save(): void {
-
-    const involvedPerson = this.involvedPerson();
+    const involvedPerson = this.store.selectedPerson();
 
     if (this.isValidForCreate(involvedPerson)) {
 
-      this.saving.set(true);
-      this.involvedPersonSubject.createInvolvedPerson(involvedPerson);
+      this.store.create(involvedPerson);
     }
   }
 
   private isValidForCreate(involvedPerson: InvolvedPerson | null): involvedPerson is InvolvedPerson {
 
     if (!involvedPerson) {
+      this._localError.set('This involved person can not be created.');
       console.error('involvedPerson is null');
       return false;
     }
 
     if (!involvedPerson.name) {
-      this.actionMessage.set('Name is required');
+      this._localError.set('Name is required.');
       return false;
     }
     if (!involvedPerson.startOfInvolvement) {
-      this.actionMessage.set('Start of involvement is required');
+      this._localError.set("Start of involvement is required.");
       return false;
     }
 
     return true;
   }
 
-  public edit(): void {
-    const involvedPerson = this.involvedPerson();
+  public update(): void {
+
+    const involvedPerson = this.store.selectedPerson();
 
     if (this.isValidForUpdate(involvedPerson)) {
 
-      this.saving.set(true);
-      this.involvedPersonSubject.updateInvolvedPerson(involvedPerson);
+      this.store.update(involvedPerson);
     }
   }
 
@@ -105,6 +75,8 @@ export class InvolvedPersonForm implements InvolvedPersonRequestedForAddingObser
     }
 
     if (!involvedPerson?.id) {
+
+      this._localError.set('This involved person can not be updated.');
       console.error('involvedPerson.id is null');
       return false;
     }
@@ -113,10 +85,6 @@ export class InvolvedPersonForm implements InvolvedPersonRequestedForAddingObser
   }
 
   public cancel(): void {
-    this.visible.set(false);
-  }
-
-  public reset(): void {
-    this.actionMessage.set(null);
+    this.store.deselect();
   }
 }

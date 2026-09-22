@@ -7,22 +7,19 @@ export class InvolvedPersonStore {
 
   private readonly service = inject(InvolvedPersonService);
 
-  // --- State ---
   private readonly _persons = signal<InvolvedPerson[]>([]);
   private readonly _selectedPerson = signal<InvolvedPerson | null>(null);
   private readonly _isLoading = signal<boolean>(false);
   private readonly _error = signal<string | null>(null);
 
-  // --- Public read-only state ---
   readonly persons = this._persons.asReadonly();
   readonly selectedPerson = this._selectedPerson.asReadonly();
   readonly isLoading = this._isLoading.asReadonly();
   readonly error = this._error.asReadonly();
 
-  // --- Computed state ---
   readonly hasError = computed(() => this._error() !== null);
+  readonly hasSelectedPerson = computed(() => this._selectedPerson() !== null);
 
-  // --- Actions ---<
   load(): void {
     this._isLoading.set(true);
     this.service.findAll().subscribe({
@@ -37,8 +34,17 @@ export class InvolvedPersonStore {
     });
   }
 
-  select(person: InvolvedPerson): void {
-    this._selectedPerson.set({...person}); // copy to avoid mutating list
+  add() {
+    const person = new InvolvedPerson();
+    this.select(person);
+  }
+
+  select(involvedPerson: InvolvedPerson): void {
+    this._selectedPerson.set({...involvedPerson});
+  }
+
+  deselect(): void {
+    this._selectedPerson.set(null);
   }
 
   create(person: InvolvedPerson): void {

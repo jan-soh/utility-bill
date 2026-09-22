@@ -1,11 +1,9 @@
-import {Component, inject, signal} from '@angular/core';
-import {InvolvedPerson} from '../../model/InvolvedPerson';
+import {Component, inject} from '@angular/core';
 import {InvolvedPersonForm} from './component/involved-person-form/involved-person-form';
-import {UtilityCostPayment} from '../../model/UtilityCostPayment';
 import {UtilityCostPaymentsForm} from './component/utility-cost-payments-form/utility-cost-payments-form';
 import {InvolvedPersonList} from './component/involved-person-list/involved-person-list';
-import {InvolvedPersonSubject} from '../../observers/involved-person/InvolvedPersonSubject';
 import {UtilityCostPaymentsList} from './component/utility-cost-payments-list/utility-cost-payments-list';
+import {InvolvedPersonStore} from '../../store/InvolvedPersonStore';
 
 @Component({
   selector: 'involved-person-component',
@@ -15,15 +13,9 @@ import {UtilityCostPaymentsList} from './component/utility-cost-payments-list/ut
 })
 export class InvolvedPersonComponent {
 
-  involvedPersonSelected = signal<InvolvedPerson | null>(null);
-  utilityCostPaymentsSelected = signal<UtilityCostPayment | null>(null);
-  involvedPersonSubject = inject(InvolvedPersonSubject);
-
-  public setInvolvedPersonSelected(involvedPerson: InvolvedPerson) {
-    this.involvedPersonSelected.set(involvedPerson);
-  }
+  readonly store = inject(InvolvedPersonStore);
 
   public add(): void {
-    this.involvedPersonSubject.requestAddInvolvedPerson();
+    this.store.add();
   }
 }

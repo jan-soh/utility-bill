@@ -1,80 +1,35 @@
-import {Component, inject, signal} from '@angular/core';
-import {InvolvedPerson} from '../../../../model/InvolvedPerson';
+import {Component, computed, inject} from '@angular/core';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
-import {UtilityCostPaymentSubject} from '../../../../observers/utility-cost-payment/UtilityCostPaymentSubject';
-import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
-import {
-  UtilityCostPaymentCreatedObserver
-} from '../../../../observers/utility-cost-payment/UtilityCostPaymentCreatedObserver';
-import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
-import {
-  InvolvedPersonRequestedForEditingObserver
-} from '../../../../observers/involved-person/InvolvedPersonRequestedForEditingObserver';
-import {
-  UtilityCostPaymentHistoryChangedObserver
-} from '../../../../observers/utility-cost-payment/UtilityCostPaymentHistoryChangedObserver';
+import {InvolvedPersonStore} from '../../../../store/InvolvedPersonStore';
+import {UtilityCostPaymentStore} from '../../../../store/UtilityCostPaymentStore';
 
 @Component({
   selector: 'utility-cost-payments-list',
   styleUrls: ['./utility-cost-payments-list.css'],
   templateUrl: './utility-cost-payments-list.html',
 })
-export class UtilityCostPaymentsList implements UtilityCostPaymentCreatedObserver, InvolvedPersonCreatedObserver, UtilityCostPaymentHistoryChangedObserver, InvolvedPersonRequestedForEditingObserver {
+export class UtilityCostPaymentsList {
 
-  public readonly utilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
-  public readonly involvedPersonSubject = inject(InvolvedPersonSubject);
 
-  public involvedPerson = signal<InvolvedPerson | null>(null);
-  public paymentHistory = signal<UtilityCostPayment[]>([]);
+  readonly involvedPersonStore = inject(InvolvedPersonStore);
+  readonly utilityCostPaymentStore = inject(UtilityCostPaymentStore);
 
-  visible = signal<boolean>(false);
-
-  constructor() {
-    this.utilityCostPaymentSubject.registerUtilityCostPaymentCreatedObserver(this);
-    this.utilityCostPaymentSubject.registerUtilityCostPaymentHistoryChangedObserver(this);
-    this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
-    this.involvedPersonSubject.registerInvolvedPersonRequestedForEditingObserver(this);
-  }
+  readonly visible = computed(() => this.involvedPersonStore.hasSelectedPerson() && this.utilityCostPaymentStore.hasPaymentHistory());
 
   public add(): void {
+
+    const involvedPerson = this.involvedPersonStore.selectedPerson();
+
+    if (involvedPerson) {
+      this.utilityCostPaymentStore.add(involvedPerson);
+    }
   }
 
   public delete(payment: UtilityCostPayment): void {
-
+    this.utilityCostPaymentStore.delete(payment);
   }
 
   public edit(payment: UtilityCostPayment): void {
-
-  }
-
-  public utilityCostPaymentCreated(utilityCostPayment: UtilityCostPayment): void {
-    this.paymentHistory.update((payments) => [...payments, utilityCostPayment]);
-    this.paymentHistory().sort((a, b) => new Date(a.validFrom).getDate() - new Date(b.validFrom).getDate());
-    this.visible.set(true);
-  }
-
-  public utilityCostPaymentCreatedError(errorMessage: string): void {
-    // nothing to do yet
-  }
-
-  public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
-    this.involvedPerson.set(involvedPerson);
-  }
-
-  public involvedPersonCreatedError(error: string): void {
-    // nothing to do yet
-  }
-
-  public utilityCostPaymentHistoryChanged(utilityCostPaymentHistory: UtilityCostPayment[]): void {
-    this.paymentHistory.set(utilityCostPaymentHistory);
-  }
-
-  public involvedPersonRequestedForEditing(involvedPerson: InvolvedPerson): void {
-    this.involvedPerson.set(involvedPerson);
-    this.visible.set(true);
-  }
-
-  public involvedPersonRequestedForEditingError(errorMessage: string): void {
-
+    this.utilityCostPaymentStore.select(payment);
   }
 }
