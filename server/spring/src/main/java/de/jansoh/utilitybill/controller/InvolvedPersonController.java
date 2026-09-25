@@ -2,6 +2,8 @@ package de.jansoh.utilitybill.controller;
 
 import de.jansoh.utilitybill.model.InvolvedPersonDTO;
 import de.jansoh.utilitybill.services.InvolvedPersonService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,22 +26,22 @@ public class InvolvedPersonController {
     }
 
     @GetMapping(PATH_ID)
-    public InvolvedPersonDTO listInvolvedPersons(@PathVariable UUID id) {
+    public InvolvedPersonDTO loadInvolvedPerson(@NotNull @PathVariable UUID id) {
         return involvedPersonService.getInvolvedPersonById(id).orElseThrow(NotFoundException::new);
     }
 
     @PostMapping(PATH)
-    public InvolvedPersonDTO saveNewPerson(@RequestBody InvolvedPersonDTO involvedPersonDTO) {
+    public InvolvedPersonDTO saveNewPerson(@Valid @RequestBody InvolvedPersonDTO involvedPersonDTO) {
         return involvedPersonService.saveNewPerson(involvedPersonDTO);
     }
 
     @PutMapping(PATH_ID)
-    public InvolvedPersonDTO updateInvolvedPerson(@PathVariable UUID id, @RequestBody InvolvedPersonDTO involvedPersonDTO) {
+    public InvolvedPersonDTO updateInvolvedPerson(@NotNull @PathVariable UUID id, @Valid @RequestBody InvolvedPersonDTO involvedPersonDTO) {
         return involvedPersonService.updateInvolvedPersonById(id, involvedPersonDTO).orElseThrow(NotFoundException::new);
     }
 
     @DeleteMapping(PATH_ID)
-    public ResponseEntity<Void> deleteInvolvedPerson(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteInvolvedPerson(@NotNull @PathVariable UUID id) {
 
         if (!involvedPersonService.deleteInvolvedPersonById(id)) {
             throw new NotFoundException();
