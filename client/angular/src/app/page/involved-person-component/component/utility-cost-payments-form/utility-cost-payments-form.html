@@ -1,39 +1,47 @@
-@if (visible() && involvedPerson() && utilityCostPayment(); as payment) {
+@if (visible()) {
   <div>
-    <h2>Add a new utility cost payments for <b>{{ involvedPerson()?.name }}</b></h2>
+    @if (this.personStore.selectedPerson(); as person) {
+      <h2>Add a new utility cost payments for <b>{{ person?.name }}</b></h2>
+    } @else {
+      <h2>Add a new utility cost payments</h2>
+    }
 
-    <div class="form-container">
-      <div class="form-group">
-        <label for="amount">Amount:</label>
-        <input id="amount" type="number" [(ngModel)]="payment.amount" [disabled]="saving()"/>
-      </div>
+    @if (this.paymentStore.selectedPayment(); as payment) {
+      <div class="form-container">
+        <div class="form-group">
+          <label for="amount">Amount:</label>
+          <input id="amount" type="number" [(ngModel)]="payment.amount" [disabled]="this.paymentStore.isLoading()"/>
+        </div>
 
-      <div class="form-group">
-        <label for="valid-from">Valid from:</label>
-        <input id="valid-from" type="date" [(ngModel)]="payment.validFrom" [disabled]="saving()"/>
-      </div>
+        <div class="form-group">
+          <label for="valid-from">Valid from:</label>
+          <input id="valid-from" type="date" [(ngModel)]="payment.validFrom"
+                 [disabled]="this.paymentStore.isLoading()"/>
+        </div>
 
-      <div class="form-group">
-        <label for="valid-to">Valid to:</label>
-        <input id="valid-to" type="date" [(ngModel)]="payment.validTo" [disabled]="saving()"/>
-      </div>
+        <div class="form-group">
+          <label for="valid-to">Valid to:</label>
+          <input id="valid-to" type="date" [(ngModel)]="payment.validTo" [disabled]="this.paymentStore.isLoading()"/>
+        </div>
 
-      <div class="button-group">
-        @if (payment.id) {
-          <button class="save-button" (click)="edit()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Edit' }}
-          </button>
-        } @else {
-          <button class="save-button" (click)="save()" [disabled]="saving()">{{ saving() ? 'Saving...' : 'Save' }}
-          </button>
+        <div class="button-group">
+          @if (payment?.id) {
+            <button class="save-button" (click)="edit()"
+                    [disabled]="this.paymentStore.isLoading()">{{ this.paymentStore.isLoading() ? 'Saving...' : 'Edit' }}
+            </button>
+          } @else {
+            <button class="save-button" (click)="save()"
+                    [disabled]="this.paymentStore.isLoading()">{{ this.paymentStore.isLoading() ? 'Saving...' : 'Save' }}
+            </button>
+          }
+        </div>
+
+        @if (errorSignal()) {
+          <div class="error-message">
+            {{ errorSignal() }}
+          </div>
         }
       </div>
-
-      <div *ngIf="errorMessage()" class="error-message">
-        {{ errorMessage() }}
-      </div>
-      <div *ngIf="actionMessage()" class="action-message">
-        {{ actionMessage() }}
-      </div>
-    </div>
+    }
   </div>
 }

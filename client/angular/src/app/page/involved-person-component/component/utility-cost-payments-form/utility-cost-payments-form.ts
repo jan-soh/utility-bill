@@ -1,84 +1,40 @@
-import {Component, inject, signal} from '@angular/core';
-import {InvolvedPersonSubject} from '../../../../observers/involved-person/InvolvedPersonSubject';
-import {InvolvedPerson} from '../../../../model/InvolvedPerson';
+import {Component, computed, inject, signal} from '@angular/core';
 import {UtilityCostPayment} from '../../../../model/UtilityCostPayment';
-import {NgIf} from '@angular/common';
+import {InvolvedPersonStore} from '../../../../store/InvolvedPersonStore';
+import {UtilityCostPaymentStore} from '../../../../store/UtilityCostPaymentStore';
 import {FormsModule} from '@angular/forms';
-import {InvolvedPersonCreatedObserver} from '../../../../observers/involved-person/InvolvedPersonCreatedObserver';
-import {
-  UtilityCostPaymentCreatedObserver
-} from '../../../../observers/utility-cost-payment/UtilityCostPaymentCreatedObserver';
-import {
-  UtilityCostPaymentAddedObserver
-} from '../../../../observers/utility-cost-payment/UtilityCostPaymentAddedObserver';
-import {UtilityCostPaymentSubject} from '../../../../observers/utility-cost-payment/UtilityCostPaymentSubject';
-import {
-  UtilityCostPaymentRequestedForEditingObserver
-} from '../../../../observers/utility-cost-payment/UtilityCostPaymentRequestedForEditingObserver';
 
 @Component({
   selector: 'utility-cost-payments-form',
   styleUrl: './utility-cost-payments-form.css',
   templateUrl: './utility-cost-payments-form.html',
-  imports: [NgIf, FormsModule],
+  imports: [FormsModule],
 })
-export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, UtilityCostPaymentRequestedForEditingObserver, UtilityCostPaymentAddedObserver, UtilityCostPaymentCreatedObserver {
+export class UtilityCostPaymentsForm {
 
-  private readonly involvedPersonSubject: InvolvedPersonSubject = inject(InvolvedPersonSubject);
-  private readonly utilityCostPaymentSubject: UtilityCostPaymentSubject = inject(UtilityCostPaymentSubject);
+  readonly paymentStore: UtilityCostPaymentStore = inject(UtilityCostPaymentStore);
+  readonly personStore: InvolvedPersonStore = inject(InvolvedPersonStore);
 
-  visible = signal<boolean>(false);
-  saving = signal<boolean>(false);
+  readonly visible = computed(() => this.paymentStore.hasSelectedPayment());
 
-  involvedPerson = signal<InvolvedPerson | null>(null);
-  utilityCostPayment = signal<UtilityCostPayment | null>(null);
+  private readonly _localError = signal<string | null>(null);
 
-  errorMessage = signal<string | null>(null);
-  actionMessage = signal<string | null>(null);
-
-  constructor() {
-
-    this.involvedPersonSubject.registerInvolvedPersonCreatedObserver(this);
-    this.utilityCostPaymentSubject.registerUtilityCostPaymentAddedObserver(this);
-    this.utilityCostPaymentSubject.registerUtilityCostPaymentCreatedObserver(this);
-    this.utilityCostPaymentSubject.registerUtilityCostPaymentRequestedForEditingObserver(this);
-  }
-
-  public involvedPersonCreated(involvedPerson: InvolvedPerson): void {
-    this.involvedPerson.set(involvedPerson);
-    this.visible.set(true);
-  }
-
-  public involvedPersonCreatedError(error: string): void {
-    // nothing to do here
-  }
-
-  public utilityCostPaymentAdded(utilityCostPayment: UtilityCostPayment): void {
-    this.utilityCostPayment.set(utilityCostPayment);
-  }
-
-  public utilityCostPaymentCreated(utilityCostPayment: UtilityCostPayment): void {
-
-  }
-
-
-  public utilityCostPaymentCreatedError(errorMessage: string): void {
-    this.errorMessage.set(errorMessage);
-  }
-
-  public utilityCostPaymentRequestedForEditing(utilityCostPayment: UtilityCostPayment): void {
-    this.utilityCostPayment.set(utilityCostPayment);
-    this.visible.set(true);
-  }
+  readonly errorSignal = computed(() => {
+    if (this._localError()) {
+      return this._localError();
+    } else if (this.paymentStore.error()) {
+      return this.paymentStore.error();
+    }
+    return null;
+  });
 
   public save(): void {
 
-    const utilityCostPayment = this.utilityCostPayment();
+    const payment = this.paymentStore.selectedPayment();
 
-    if (this.isValidForCreate(utilityCostPayment)) {
+    if (this.isValidForCreate(payment)) {
 
-      this.saving.set(true);
-      this.utilityCostPaymentSubject.createUtilityCostPayment();
+      this.paymentStore.create(payment);
     }
   }
 
@@ -86,19 +42,20 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
 
     if (!utilityCostPayment) {
       console.error('utilityCostPayment is null');
+      this._localError.set('This utility cost payment can not be created.');
       return false;
     }
 
     if (!utilityCostPayment.involvedPersonId) {
-      this.actionMessage.set('Link to involved person is missing');
+      this._localError.set('Link to involved person is missing');
       return false;
     }
     if (!utilityCostPayment.amount) {
-      this.actionMessage.set('Amount is required');
+      this._localError.set('Amount is required');
       return false;
     }
     if (!utilityCostPayment.validFrom) {
-      this.actionMessage.set('Valid from is required');
+      this._localError.set('Valid from is required');
       return false;
     }
 
@@ -107,12 +64,10 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
 
   public edit(): void {
 
-    const utilityCostPayment = this.utilityCostPayment();
+    const utilityCostPayment = this.paymentStore.selectedPayment();
 
     if (this.isValidForUpdate(utilityCostPayment)) {
-
-      this.saving.set(true);
-      //this.utilityCostPaymentSubject.updateUtilityCostPayment(utilityCostPayment);
+      this.paymentStore.update(utilityCostPayment);
     }
   }
 
@@ -126,17 +81,10 @@ export class UtilityCostPaymentsForm implements InvolvedPersonCreatedObserver, U
 
     if (!utilityCostPayment?.id) {
       console.error('utilityCostPayment.id is null');
+      this._localError.set('This utility cost payment can not be updated.');
       return false;
     }
 
     return true;
-  }
-
-  public cancel(): void {
-    this.visible.set(false);
-  }
-
-  public reset(): void {
-    this.actionMessage.set(null);
   }
 }
