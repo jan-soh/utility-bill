@@ -1,6 +1,7 @@
 import {computed, inject, Injectable, signal} from '@angular/core';
 import {InvolvedPersonService} from '../service/InvolvedPersonService';
 import {InvolvedPerson} from '../model/InvolvedPerson';
+import {Observable, tap} from 'rxjs';
 
 @Injectable({providedIn: 'root'})
 export class InvolvedPersonStore {
@@ -47,14 +48,13 @@ export class InvolvedPersonStore {
     this._selectedPerson.set(null);
   }
 
-  create(person: InvolvedPerson): void {
-    this.service.save(person).subscribe({
-      next: created => {
+  create(person: InvolvedPerson): Observable<InvolvedPerson> {
+    return this.service.save(person).pipe(
+      tap(created => {
         this._persons.update(list => [...list, created]);
         this._selectedPerson.set(null);
-      },
-      error: () => this._error.set('Failed to create person.')
-    });
+      })
+    )
   }
 
   update(person: InvolvedPerson): void {
@@ -65,7 +65,9 @@ export class InvolvedPersonStore {
         );
         this._selectedPerson.set(null);
       },
-      error: () => this._error.set('Failed to update person.')
+      error: (err) => {
+        this._error.set('Failed to update person.')
+      }
     });
   }
 
